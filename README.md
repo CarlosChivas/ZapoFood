@@ -12,13 +12,12 @@ This application has the purpose of allowing users to make reservations at their
 The user will be able to add restaurants to favorites, this section will save the option of favorite restaurants for the user, this will allow the user to make the reservations that he makes daily in a fast way.
 
 ### App Evaluation
-[Evaluation of your app across the following attributes]
-- **Category:**
-- **Mobile:**
-- **Story:**
-- **Market:**
-- **Habit:**
-- **Scope:**
+- **Category:** Food / Service
+- **Mobile:** Focused on mobile experience, uses the location system
+- **Story:** The application allows users to reserve a place in a restaurant from their homes.
+- **Market:** Anyone user who want to avoid spend time looking for a place to eat
+- **Habit:** The user can navigate through the application looking for his favorite restaurants, he can also see the opinions of the users about those places trying to make a better decision.
+- **Scope:** We want to start focused on offering a list of options that the user can use to make a reservation and enjoy a little food without having to be afraid of finding a good place with available places, over time we can improve with functionalities such as offering recommendations according to the user's tastes.
 
 ## Product Spec
 
@@ -40,12 +39,14 @@ The user will be able to add restaurants to favorites, this section will save th
 
 ### 2. Screen Archetypes
 
-* [list first screen here]
-   * [list associated required story here]
-   * ...
-* [list second screen here]
-   * [list associated required story here]
-   * ...
+* Login
+   * The user can log into the application with different account options such as Facebook, Google or ZapoFood itself. 
+* Stream
+   * The application will display different restaurant options near the user's location.
+   * Search bar for find quickly their favorites restaurants.
+* Detail
+    * The user can select any option and the application will show the places available to reserve.
+    * User can select the time for the reservation and the duration.
 
 ### 3. Navigation
 
