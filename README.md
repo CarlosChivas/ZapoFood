@@ -30,6 +30,7 @@ The user will be able to add restaurants to favorites, this section will save th
 * The user can select any option and the application will show the places available to reserve.
 * User can select the time for the reservation and the duration.
 * Search bar for find quickly their favorites restaurants.
+* The user can see his reservations
 
 **Optional Nice-to-have Stories**
 
@@ -47,23 +48,25 @@ The user will be able to add restaurants to favorites, this section will save th
 * Detail
     * The user can select any option and the application will show the places available to reserve.
     * User can select the time for the reservation and the duration.
+* My reservations
+    * The user can see his reservations
 
 ### 3. Navigation
 
 **Tab Navigation** (Tab to Screen)
 
-* [fill out your first tab]
-* [fill out your second tab]
-* [fill out your third tab]
+* Stream Screen
+* My reservations
+* Logout
 
 **Flow Navigation** (Screen to Screen)
 
-* [list first screen here]
-   * [list screen navigation here]
-   * ...
-* [list second screen here]
-   * [list screen navigation here]
-   * ...
+* Login Screen
+   * Stream Screen
+* Stream Screen
+   * Make reservation
+* Make reservation
+    * My reservations
 
 ## Wireframes
 [Add picture of your hand sketched wireframes in this section]
