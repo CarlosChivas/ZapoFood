@@ -23,7 +23,7 @@
         android:textSize="50sp" />
 
     <EditText
-        android:id="@+id/loginUsername"
+        android:id="@+id/etLoginUsername"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_below="@+id/loginTitle"
@@ -38,10 +38,10 @@
         android:paddingEnd="12dp" />
 
     <EditText
-        android:id="@+id/loginPassword"
+        android:id="@+id/etLoginPassword"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_below="@+id/loginUsername"
+        android:layout_below="@+id/etLoginUsername"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="20dp"
@@ -53,6 +53,18 @@
         android:inputType="textPassword"
         android:paddingStart="12dp"
         android:paddingEnd="12dp" />
+
+    <Button
+        android:id="@+id/btnLoginSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etLoginPassword"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Login" />
 
 
 </RelativeLayout>
