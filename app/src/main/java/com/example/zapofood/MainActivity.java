@@ -29,17 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        /*ImageView iconView = (ImageView) findViewById(R.id.icon);
-
-        iconView.setColorFilter(selected ?
-                getResources().getColor(R.color.navdrawer_icon_selected_tint) :
-                getResources().getColor(R.color.navdrawer_icon_tint));*/
-        //bottomNavigationView.setItemIconTintList(null);
-        //bottomNavigationView.setItemTextColor();
-        //bottomNavigationView.setItemIconTintList(ContextCompat.getColorStateList(this, R.color.my_icon_tint));
-
-        //bottomNavigationView.getMenu().findItem(R.id.action_myreservations).getIcon().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

@@ -2,6 +2,7 @@ package com.example.zapofood;
 
 import android.app.Application;
 
+import com.example.zapofood.models.Restaurant;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -11,7 +12,7 @@ public class ParseApplication extends Application {
         super.onCreate();
 
         //Register the parse model
-        //ParseObject.registerSubclass(Post.class);
+        ParseObject.registerSubclass(Restaurant.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(getString(R.string.back4app_app_id))
