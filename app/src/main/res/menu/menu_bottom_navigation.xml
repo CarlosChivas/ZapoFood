@@ -3,22 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_favorites"
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_home"
         android:enabled="true"
-        android:icon="@drawable/ic_user"
-        android:title="User"
+        android:title="Home"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_schedules"
-        android:enabled="true"
+        android:id="@+id/action_myreservations"
         android:icon="@drawable/ic_myreservations"
+        android:enabled="true"
         android:title="My reservations"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_music"
+        android:id="@+id/action_user"
+        android:icon="@drawable/ic_user"
         android:enabled="true"
-        android:icon="@drawable/ic_home"
-        android:title="Home"
+        android:title="User"
         app:showAsAction="always" />
 
 </menu>
