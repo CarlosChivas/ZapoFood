@@ -42,6 +42,7 @@ import com.google.android.gms.tasks.Task;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -114,10 +115,9 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        startLocationUpdates();
-
         rvRestaurants = view.findViewById(R.id.rvRestaurants);
         allRestaurants = new ArrayList<>();
+        startLocationUpdates();
         restaurantsAdapter = new RestaurantsAdapter(getContext(), allRestaurants);
         // allows for optimizations
         rvRestaurants.setHasFixedSize(true);
@@ -148,7 +148,13 @@ public class HomeFragment extends Fragment {
             getFusedLocationProviderClient(getContext()).requestLocationUpdates(mLocationRequest, new LocationCallback() {
                         @Override
                         public void onLocationResult(LocationResult locationResult) {
-                            getCity(getContext(), locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+                            String userCity = getCity(getContext(), locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+                            if(userCity != null){
+                                queryRestaurants(userCity.toUpperCase());
+                            }
+                            else {
+                                Toast.makeText(getContext(), "Error to get the current city", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     },
                     Looper.myLooper());
@@ -156,27 +162,27 @@ public class HomeFragment extends Fragment {
     }
 
     //Method for get user city
-    public static void getCity(Context context, double latitude, double longitude) {
-        Log.d("loc", "Llego al getCity");
+    public static String getCity(Context context, double latitude, double longitude) {
         try {
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && addresses.size() > 0) {
                 String city = addresses.get(0).getLocality();
                 Toast.makeText(context.getApplicationContext(), city, Toast.LENGTH_SHORT).show();
+                return city;
             }
         } catch (IOException e) {
             Log.i("Location", "Error with the address" + e);
             e.printStackTrace();
         }
+        return null;
     }
 
-    //Method to get the Posts
+    //Method to get the Restaurants
     protected void queryRestaurants(String city) {
         ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);
-        //query.include(Post.KEY_USER);
+        query.whereEqualTo(Restaurant.KEY_CITY, city);
         query.setLimit(20);
-        //query.addDescendingOrder(Restaurant.KEY_CREATED);
         query.findInBackground(new FindCallback<Restaurant>() {
             @Override
             public void done(List<Restaurant> restaurants, ParseException e) {

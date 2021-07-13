@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     private BottomNavigationView bottomNavigationView;
 
-    private FusedLocationProviderClient client;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,37 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        client = getFusedLocationProviderClient(this);
-
-        //Check permission
-        getCurrentLocation();
-    }
-
-
-    private LocationRequest mLocationRequest;
-
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
-
-
-
-
-    private void getCurrentLocation(){
-        if(ActivityCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            Task<Location> task = client.getLastLocation();
-            task.addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if(location != null){
-                        Log.i("Main", "Lo logré señor Musk");
-                    }
-                    else{
-                        Log.i("Main", "Valimos");
-                    }
-                }
-            });
-        }
+        // Set default selection
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 }
