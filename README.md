@@ -72,9 +72,8 @@ The user will be able to add restaurants to favorites, this section will save th
 
 
 ### Digital Wireframes & Mockups
-<img src="https://github.com/CarlosChivas/ZapoFood/blob/master/Images/Android%20-%201.png" width=600>
-<img src="https://github.com/CarlosChivas/ZapoFood/blob/master/Images/Android%20-%202.png" width=600>
-<img src="https://github.com/CarlosChivas/ZapoFood/blob/master/Images/Android%20-%203.png" width=600>
+<img src="https://github.com/CarlosChivas/ZapoFood/blob/master/Images/Android%20-%201.png" width=300><img src="https://github.com/CarlosChivas/ZapoFood/blob/master/Images/Android%20-%202.png" width=300><img src="https://github.com/CarlosChivas/ZapoFood/blob/master/Images/Android%20-%203.png" width=300>
+
 
 ### Interactive Prototype
 
