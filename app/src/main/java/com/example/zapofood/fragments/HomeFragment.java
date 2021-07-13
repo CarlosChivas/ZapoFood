@@ -1,28 +1,54 @@
 package com.example.zapofood.fragments;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.zapofood.MainActivity;
 import com.example.zapofood.R;
 import com.example.zapofood.adapters.RestaurantsAdapter;
 import com.example.zapofood.models.Restaurant;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class HomeFragment extends Fragment {
 
@@ -40,6 +66,10 @@ public class HomeFragment extends Fragment {
     private RecyclerView rvRestaurants;
     protected RestaurantsAdapter restaurantsAdapter;
 
+    private FusedLocationProviderClient client;
+    private String userCity;
+
+    private LocationRequest mLocationRequest;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -81,8 +111,10 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull  View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        startLocationUpdates();
 
         rvRestaurants = view.findViewById(R.id.rvRestaurants);
         allRestaurants = new ArrayList<>();
@@ -92,16 +124,59 @@ public class HomeFragment extends Fragment {
         rvRestaurants.setAdapter(restaurantsAdapter);
         // Define 2 column grid layout
         rvRestaurants.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        // get the restaurants for mmy database
-        queryRestaurants();
+
+    }
+
+    // Trigger new location updates at interval
+    protected void startLocationUpdates() {
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        // Create LocationSettingsRequest object using location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        LocationSettingsRequest locationSettingsRequest = builder.build();
+
+        // Check whether location settings are satisfied
+        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+        SettingsClient settingsClient = LocationServices.getSettingsClient(getContext());
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            getFusedLocationProviderClient(getContext()).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                        @Override
+                        public void onLocationResult(LocationResult locationResult) {
+                            getCity(getContext(), locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+                        }
+                    },
+                    Looper.myLooper());
+        }
+    }
+
+    //Method for get user city
+    public static void getCity(Context context, double latitude, double longitude) {
+        Log.d("loc", "Llego al getCity");
+        try {
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null && addresses.size() > 0) {
+                String city = addresses.get(0).getLocality();
+                Toast.makeText(context.getApplicationContext(), city, Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            Log.i("Location", "Error with the address" + e);
+            e.printStackTrace();
+        }
     }
 
     //Method to get the Posts
-    protected void queryRestaurants() {
+    protected void queryRestaurants(String city) {
         ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);
         //query.include(Post.KEY_USER);
         query.setLimit(20);
-        query.addDescendingOrder(Restaurant.KEY_CREATED);
+        //query.addDescendingOrder(Restaurant.KEY_CREATED);
         query.findInBackground(new FindCallback<Restaurant>() {
             @Override
             public void done(List<Restaurant> restaurants, ParseException e) {
@@ -119,5 +194,3 @@ public class HomeFragment extends Fragment {
         });
     }
 }
-
-
