@@ -69,17 +69,28 @@ The user will be able to add restaurants to favorites, this section will save th
     * My reservations
 
 ## Wireframes
-[Add picture of your hand sketched wireframes in this section]
-<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
 
-### [BONUS] Digital Wireframes & Mockups
 
-### [BONUS] Interactive Prototype
+### Digital Wireframes & Mockups
+<img src="https://github.com/CarlosChivas/ZapoFood/blob/master/Images/Android%20-%201.png" width=600>
+<img src="https://github.com/CarlosChivas/ZapoFood/blob/master/Images/Android%20-%202.png" width=600>
+<img src="https://github.com/CarlosChivas/ZapoFood/blob/master/Images/Android%20-%203.png" width=600>
+
+### Interactive Prototype
 
 ## Schema 
-[This section will be completed in Unit 9]
 ### Models
-[Add table of models]
+#### Restaurant
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | Unique id for the user post (default field) |
+   | name          | String   | Restaurant name |
+   | image         | File     | Image o logo of the restaurant |
+   | description       | String   | Restaurant description |
+   | score | Number   | Score determinated by users |
+   | createdAt     | DateTime | Date when restaurant is created (default field) |
+   | updatedAt     | DateTime | Date when restaurant is last updated (default field) |
 ### Networking
 - [Add list of network requests by screen ]
 - [Create basic snippets for each Parse network request]
