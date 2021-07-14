@@ -10,17 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/navigationView"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarSearch"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            app:title="Home page"
             app:menu="@menu/menu_top_search"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRestaurants"
-            android:layout_below="@id/navigationView"
+            android:layout_below="@id/toolbarSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </RelativeLayout>
 
 

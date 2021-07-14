@@ -10,6 +10,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+
+import android.view.MenuInflater;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
@@ -45,8 +47,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.Inflater;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 public class HomeFragment extends Fragment {
 
@@ -104,6 +114,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
 
         rvRestaurants = view.findViewById(R.id.rvRestaurants);
         allRestaurants = new ArrayList<>();
@@ -115,15 +126,25 @@ public class HomeFragment extends Fragment {
         // Define 2 column grid layout
         rvRestaurants.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        navigationView = view.findViewById(R.id.navigationView);
-        menu = navigationView.getMenu();
-        searchItem = menu.findItem(R.id.action_search);
+        // assigning ID of the toolbar to a variable
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarSearch);
+
+        // using toolbar as ActionBar
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_top_search, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Make the query with the name written
+                // perform query here
                 fetchRestaurantsName(query);
                 searchView.clearFocus();
                 return true;
@@ -230,10 +251,6 @@ public class HomeFragment extends Fragment {
             }
         });
         Toast.makeText(getContext(), "Llego al name", Toast.LENGTH_SHORT).show();
-
-    }
-    //Method to find restaurants
-    private void fetchRestaurantsCity(String name){
 
     }
     //Method to find restaurants
