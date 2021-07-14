@@ -9,7 +9,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -31,6 +35,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -57,6 +63,9 @@ public class HomeFragment extends Fragment {
     protected List<Restaurant> allRestaurants;
     private RecyclerView rvRestaurants;
     protected RestaurantsAdapter restaurantsAdapter;
+    private NavigationView navigationView;
+    private Menu menu;
+    private MenuItem searchItem;
 
     private FusedLocationProviderClient client;
     private String userCity;
@@ -67,15 +76,6 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -114,6 +114,26 @@ public class HomeFragment extends Fragment {
         rvRestaurants.setAdapter(restaurantsAdapter);
         // Define 2 column grid layout
         rvRestaurants.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        navigationView = view.findViewById(R.id.navigationView);
+        menu = navigationView.getMenu();
+        searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Make the query with the name written
+                fetchRestaurantsName(query);
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     // Find the user location
@@ -128,7 +148,6 @@ public class HomeFragment extends Fragment {
         LocationSettingsRequest locationSettingsRequest = builder.build();
 
         // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
         SettingsClient settingsClient = LocationServices.getSettingsClient(getContext());
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
@@ -192,6 +211,25 @@ public class HomeFragment extends Fragment {
 
     //Method to find restaurants
     private void fetchRestaurantsName(String name){
+        ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);
+        query.whereEqualTo(Restaurant.KEY_NAME, name);
+        query.setLimit(20);
+        query.findInBackground(new FindCallback<Restaurant>() {
+            @Override
+            public void done(List<Restaurant> restaurants, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+                for (Restaurant restaurant : restaurants) {
+                    Log.i(TAG, "Posts: " + restaurant.getDescription());
+                }
+                allRestaurants.clear();
+                allRestaurants.addAll(restaurants);
+                restaurantsAdapter.notifyDataSetChanged();
+            }
+        });
+        Toast.makeText(getContext(), "Llego al name", Toast.LENGTH_SHORT).show();
 
     }
     //Method to find restaurants
