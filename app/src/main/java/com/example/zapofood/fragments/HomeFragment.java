@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Looper;
@@ -23,11 +21,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.zapofood.MainActivity;
 import com.example.zapofood.R;
 import com.example.zapofood.adapters.RestaurantsAdapter;
 import com.example.zapofood.models.Restaurant;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -35,14 +31,9 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -108,7 +99,6 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
-
     }
 
     @Override
@@ -124,10 +114,9 @@ public class HomeFragment extends Fragment {
         rvRestaurants.setAdapter(restaurantsAdapter);
         // Define 2 column grid layout
         rvRestaurants.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
     }
 
-    // Trigger new location updates at interval
+    // Find the user location
     protected void startLocationUpdates() {
 
         mLocationRequest = new LocationRequest();
@@ -143,9 +132,11 @@ public class HomeFragment extends Fragment {
         SettingsClient settingsClient = LocationServices.getSettingsClient(getContext());
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            getFusedLocationProviderClient(getContext()).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+        // We need check of we have the permissions
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+                    getFusedLocationProviderClient(getContext()).requestLocationUpdates(mLocationRequest, new LocationCallback() {
                         @Override
                         public void onLocationResult(LocationResult locationResult) {
                             String userCity = getCity(getContext(), locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
@@ -156,8 +147,7 @@ public class HomeFragment extends Fragment {
                                 Toast.makeText(getContext(), "Error to get the current city", Toast.LENGTH_SHORT).show();
                             }
                         }
-                    },
-                    Looper.myLooper());
+                    }, Looper.myLooper());
         }
     }
 
@@ -199,4 +189,18 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
+    //Method to find restaurants
+    private void fetchRestaurantsName(String name){
+
+    }
+    //Method to find restaurants
+    private void fetchRestaurantsCity(String name){
+
+    }
+    //Method to find restaurants
+    private void fetchRestaurantsScore(String name){
+
+    }
+
 }
