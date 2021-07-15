@@ -3,10 +3,10 @@
 
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/user"
+        android:icon="@drawable/ic_search_black_24dp"
         android:orderInCategory="5"
         android:title="Search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always|collapseActionView" />
+        app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

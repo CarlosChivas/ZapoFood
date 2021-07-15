@@ -2,21 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_home"
-        android:icon="@drawable/ic_home"
+        android:id="@+id/action_search_location"
         android:enabled="true"
-        android:title="Home"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_myreservations"
-        android:icon="@drawable/ic_myreservations"
-        android:enabled="true"
+        android:icon="@drawable/ic_search_location"
         android:title="My reservations"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_user"
-        android:icon="@drawable/ic_user"
+        android:id="@+id/action_search_city"
         android:enabled="true"
+        android:icon="@drawable/ic_search_city"
+        android:title="Home"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_search_name"
+        android:enabled="true"
+        android:icon="@drawable/ic_search_restaurant"
+        android:title="My reservations"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_search_score"
+        android:enabled="true"
+        android:icon="@drawable/ic_search_score"
         android:title="User"
         app:showAsAction="always" />
+
 </menu>

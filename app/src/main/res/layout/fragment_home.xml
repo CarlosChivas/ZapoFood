@@ -13,13 +13,46 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarSearch"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            app:title="Home page"
-            app:menu="@menu/menu_top_search"/>
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:paddingStart="0dp"
+            app:contentInsetStart="0dp"
+            app:title=" ">
+
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="315dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="0dp"
+                android:background="@drawable/custom_search"
+                android:hint="Search"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp" />
+
+            <ImageButton
+                android:id="@+id/ibSearch"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="15dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_search_black_24dp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarSearchOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbarSearch"
+            >
+            <TextView
+                android:id="@+id/tvTitleOptionsSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRestaurants"
-            android:layout_below="@id/toolbarSearch"
+            android:layout_below="@id/toolbarSearchOptions"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

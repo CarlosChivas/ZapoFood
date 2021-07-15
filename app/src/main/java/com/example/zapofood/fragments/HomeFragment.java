@@ -3,17 +3,16 @@ package com.example.zapofood.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 
-import android.view.MenuInflater;
 import androidx.core.app.ActivityCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +24,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zapofood.R;
@@ -47,20 +49,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.zip.Inflater;
-
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
 
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
+    /// TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -76,9 +72,12 @@ public class HomeFragment extends Fragment {
     private NavigationView navigationView;
     private Menu menu;
     private MenuItem searchItem;
+    Toolbar toolbar;
+    Toolbar toolbar2;
+    private String typeSearch = "location";
 
     private FusedLocationProviderClient client;
-    private String userCity;
+    private String userCurrentCity;
 
     private LocationRequest mLocationRequest;
 
@@ -118,7 +117,10 @@ public class HomeFragment extends Fragment {
 
         rvRestaurants = view.findViewById(R.id.rvRestaurants);
         allRestaurants = new ArrayList<>();
+        toolbar2 = (Toolbar) view.findViewById(R.id.toolbarSearchOptions);
         startLocationUpdates();
+        toolbar = (Toolbar) view.findViewById(R.id.toolbarSearch);
+        configToolbar(toolbar);
         restaurantsAdapter = new RestaurantsAdapter(getContext(), allRestaurants);
         // allows for optimizations
         rvRestaurants.setHasFixedSize(true);
@@ -127,13 +129,39 @@ public class HomeFragment extends Fragment {
         rvRestaurants.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         // assigning ID of the toolbar to a variable
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarSearch);
+
 
         // using toolbar as ActionBar
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
 
     }
-    @Override
+    private void configToolbar(Toolbar toolbar){
+        ImageButton imageButtonSearch = toolbar.findViewById(R.id.ibSearch);
+        imageButtonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText objectToSearch = toolbar.findViewById(R.id.etSearch);
+                String objectSearch = objectToSearch.getText().toString();
+                Toast.makeText(getContext(), "Button pressed", Toast.LENGTH_SHORT).show();
+                switch (typeSearch) {
+                    case "city":
+                        queryRestaurants(objectSearch.toUpperCase());
+                        break;
+                    case "name":
+                        fetchRestaurantsName(objectSearch);
+                        break;
+                    case "score":
+                        fetchRestaurantsScore(objectSearch);
+                    case "location":
+                    default:
+                        startLocationUpdates();
+                        break;
+                }
+            }
+        });
+    }
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_top_search, menu);
         super.onCreateOptionsMenu(menu,inflater);
@@ -153,6 +181,54 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
+            }
+        });
+    }*/
+
+    private void configToolbar2(Toolbar toolbar2){
+        toolbar2.inflateMenu(R.menu.menu_options_search);
+        TextView textViewTitleSearch = toolbar2.findViewById(R.id.tvTitleOptionsSearch);
+        textViewTitleSearch.setText("Search by my location (" + userCurrentCity + ")");
+        toolbar2.getMenu().findItem(R.id.action_search_location).getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
+
+        toolbar2.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_search_location:
+                        item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_name).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_score).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_city).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        textViewTitleSearch.setText("Search by my location (" + userCurrentCity + ")");
+                        typeSearch = "location";
+                        break;
+                    case R.id.action_search_city:
+                        item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_name).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_score).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_location).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        textViewTitleSearch.setText("Search by City");
+                        typeSearch = "city";
+                        break;
+                    case R.id.action_search_name:
+                        item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_city).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_score).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_location).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        textViewTitleSearch.setText("Search by name");
+                        typeSearch = "name";
+                        break;
+                    case R.id.action_search_score:
+                    default:
+                        item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_name).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_city).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        toolbar2.getMenu().findItem(R.id.action_search_location).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
+                        textViewTitleSearch.setText("Search by score");
+                        typeSearch = "score";
+                        break;
+                }
+                return true;
             }
         });
     }
@@ -181,6 +257,8 @@ public class HomeFragment extends Fragment {
                         public void onLocationResult(LocationResult locationResult) {
                             String userCity = getCity(getContext(), locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
                             if(userCity != null){
+                                userCurrentCity = userCity;
+                                configToolbar2(toolbar2);
                                 queryRestaurants(userCity.toUpperCase());
                             }
                             else {
