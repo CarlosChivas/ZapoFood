@@ -4,26 +4,19 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.zapofood.R;
-import com.example.zapofood.adapters.RestaurantsAdapter;
+import com.example.zapofood.models.Restaurant;
 
-import java.util.ArrayList;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RestaurantDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RestaurantDetailsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -35,12 +28,13 @@ public class RestaurantDetailsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public static RestaurantDetailsFragment newInstance(int someInt, String someTitle) {
+    private TextView tvTitleRestaurant;
+    private ImageButton btnBackHome;
+
+    public static RestaurantDetailsFragment newInstance(Restaurant restaurant) {
         RestaurantDetailsFragment fragmentDemo = new RestaurantDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt("someInt", someInt);
-        args.putString("someTitle", someTitle);
-        //args.put
+        args.putParcelable("restaurant", restaurant);
         fragmentDemo.setArguments(args);
         return fragmentDemo;
     }
@@ -85,8 +79,16 @@ public class RestaurantDetailsFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int SomeInt = getArguments().getInt("someInt", 0);
-        String someTitle = getArguments().getString("someTitle", "");
-        Toast.makeText(getContext(), someTitle + " " + SomeInt, Toast.LENGTH_SHORT).show();
+        Restaurant restaurant = getArguments().getParcelable("restaurant");
+        tvTitleRestaurant = view.findViewById(R.id.tvTitlteRestaurant);
+        btnBackHome = view.findViewById(R.id.btnBackHome);
+        btnBackHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.popBackStack();
+            }
+        });
+        tvTitleRestaurant.setText(restaurant.getName());
     }
 }

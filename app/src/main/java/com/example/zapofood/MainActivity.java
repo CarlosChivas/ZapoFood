@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_user:
                     default:
-                        fragment = new RestaurantDetailsFragment();
+                        fragment = new UserFragment();
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();

@@ -143,8 +143,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(View itemView, int position) {
                 final FragmentManager fragmentManager = getParentFragmentManager();
-                RestaurantDetailsFragment fragmentDemo = RestaurantDetailsFragment.newInstance(5, "my title");
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragmentDemo).commit();
+                RestaurantDetailsFragment fragmentDemo = RestaurantDetailsFragment.newInstance(allRestaurants.get(position));
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });
     }
