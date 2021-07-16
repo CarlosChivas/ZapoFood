@@ -11,6 +11,7 @@ public class Restaurant extends ParseObject {
     public static final String KEY_NAME = "name";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_CITY = "city";
+    public static final String KEY_SCORE = "score";
 
     public String getDescription(){
         return getString(KEY_DESCRIPTION);
@@ -20,4 +21,5 @@ public class Restaurant extends ParseObject {
         return getParseFile(KEY_IMAGE);
     }
     public String getCity(){return getString(KEY_CITY);}
+    public int getScore(){return getInt(KEY_SCORE);}
 }

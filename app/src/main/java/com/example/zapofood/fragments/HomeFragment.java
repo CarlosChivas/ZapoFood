@@ -2,6 +2,7 @@ package com.example.zapofood.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -12,8 +13,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +32,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.zapofood.LoginActivity;
+import com.example.zapofood.MainActivity;
 import com.example.zapofood.R;
 import com.example.zapofood.adapters.RestaurantsAdapter;
 import com.example.zapofood.models.Restaurant;
@@ -43,6 +51,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
 import java.io.IOException;
@@ -75,6 +84,8 @@ public class HomeFragment extends Fragment {
     Toolbar toolbar;
     Toolbar toolbar2;
     private String typeSearch = "location";
+    //final FragmentManager fragmentManager;
+
 
     private FusedLocationProviderClient client;
     private String userCurrentCity;
@@ -127,14 +138,15 @@ public class HomeFragment extends Fragment {
         rvRestaurants.setAdapter(restaurantsAdapter);
         // Define 2 column grid layout
         rvRestaurants.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-        // assigning ID of the toolbar to a variable
-
-
-        // using toolbar as ActionBar
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-
+        //We create a pop-up for the post details
+        restaurantsAdapter.setOnItemClickListener(new RestaurantsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                final FragmentManager fragmentManager = getParentFragmentManager();
+                RestaurantDetailsFragment fragmentDemo = RestaurantDetailsFragment.newInstance(5, "my title");
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragmentDemo).commit();
+            }
+        });
     }
     private void configToolbar(Toolbar toolbar){
         ImageButton imageButtonSearch = toolbar.findViewById(R.id.ibSearch);
@@ -152,7 +164,7 @@ public class HomeFragment extends Fragment {
                         fetchRestaurantsName(objectSearch);
                         break;
                     case "score":
-                        fetchRestaurantsScore(objectSearch);
+                        fetchRestaurantsScore(Integer.parseInt(objectSearch));
                     case "location":
                     default:
                         startLocationUpdates();
@@ -328,12 +340,27 @@ public class HomeFragment extends Fragment {
                 restaurantsAdapter.notifyDataSetChanged();
             }
         });
-        Toast.makeText(getContext(), "Llego al name", Toast.LENGTH_SHORT).show();
-
     }
     //Method to find restaurants
-    private void fetchRestaurantsScore(String name){
-
+    private void fetchRestaurantsScore(int score){
+        ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);
+        query.whereEqualTo(Restaurant.KEY_SCORE, score);
+        query.setLimit(20);
+        query.findInBackground(new FindCallback<Restaurant>() {
+            @Override
+            public void done(List<Restaurant> restaurants, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+                for (Restaurant restaurant : restaurants) {
+                    Log.i(TAG, "Posts: " + restaurant.getDescription());
+                }
+                allRestaurants.clear();
+                allRestaurants.addAll(restaurants);
+                restaurantsAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
 }

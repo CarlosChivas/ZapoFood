@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.example.zapofood.fragments.HomeFragment;
 import com.example.zapofood.fragments.MyReservationsFragment;
+import com.example.zapofood.fragments.RestaurantDetailsFragment;
 import com.example.zapofood.fragments.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_user:
                     default:
-                        fragment = new UserFragment();
+                        fragment = new RestaurantDetailsFragment();
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
@@ -49,5 +50,9 @@ public class MainActivity extends AppCompatActivity {
         });
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
+    }
+
+    public void detailsFragment(){
+        fragmentManager.beginTransaction().replace(R.id.flContainer, new RestaurantDetailsFragment()).commit();
     }
 }
