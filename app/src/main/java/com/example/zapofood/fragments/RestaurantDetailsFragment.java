@@ -37,6 +37,8 @@ public class RestaurantDetailsFragment extends Fragment {
     private ImageButton btnBackHome;
     private ImageView ivRestaurantImage;
     RatingBar rbVoteAverage;
+    private TextView tvDescriptionRestaurant;
+    private TextView tvAddressRestaurant;
 
     public static RestaurantDetailsFragment newInstance(Restaurant restaurant) {
         RestaurantDetailsFragment fragmentDemo = new RestaurantDetailsFragment();
@@ -91,6 +93,8 @@ public class RestaurantDetailsFragment extends Fragment {
         btnBackHome = view.findViewById(R.id.btnBackHome);
         ivRestaurantImage = view.findViewById(R.id.ivRestaurantImage);
         rbVoteAverage = view.findViewById(R.id.rbVoteAverage);
+        tvDescriptionRestaurant = view.findViewById(R.id.tvDescriptionRestaurant);
+        tvAddressRestaurant = view.findViewById(R.id.tvAddressRestaurant);
         btnBackHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,5 +107,7 @@ public class RestaurantDetailsFragment extends Fragment {
         Glide.with(getContext()).load(image.getUrl()).into(ivRestaurantImage);
         rbVoteAverage.setRating((float) restaurant.getScore());
         Toast.makeText(getContext(), "Rating " + (float) restaurant.getScore(), Toast.LENGTH_SHORT).show();
+        tvDescriptionRestaurant.setText(restaurant.getDescription());
+        tvAddressRestaurant.setText(restaurant.getAddress());
     }
 }

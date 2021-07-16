@@ -6,67 +6,106 @@
     android:layout_height="match_parent"
     tools:context=".fragments.RestaurantDetailsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="800dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarRestaurantDetails"
+        <!-- TODO: Update blank fragment layout -->
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="0dp"
-            android:paddingStart="0dp">
+            android:layout_height="match_parent">
 
-            <ImageButton
-                android:id="@+id/btnBackHome"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarRestaurantDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="0dp"
+                android:paddingStart="0dp">
+
+                <ImageButton
+                    android:id="@+id/btnBackHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:src="@drawable/ic_back_home"
+                    app:tint="#000000" />
+
+                <TextView
+                    android:id="@+id/tvTitlteRestaurant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:text="TextView"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
+            </androidx.appcompat.widget.Toolbar>
+
+            <ImageView
+                android:id="@+id/ivRestaurantImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/toolbarRestaurantDetails"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="34dp"
+                android:layout_marginEnd="20dp"
+                tools:src="@tools:sample/avatars" />
+
+            <RatingBar
+                android:id="@+id/rbVoteAverage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/ivRestaurantImage"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="46dp"
                 android:background="#FFFFFF"
-                android:src="@drawable/ic_back_home"
-                app:tint="#000000" />
+                android:backgroundTint="#FFFFFF"
+                android:progressBackgroundTint="#F4EDBE"
+                android:progressTint="#F6D52E"
+                android:secondaryProgressTint="#FFFFFF"
+                android:stepSize="0.5" />
 
             <TextView
-                android:id="@+id/tvTitlteRestaurant"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvDescriptionRestaurant"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
-                android:text="TextView"
+                android:layout_marginEnd="40dp"
+                android:layout_below="@+id/rbVoteAverage"
+                android:layout_marginTop="15dp"
+                android:maxHeight="300dp"
+                android:text="Description"
                 android:textColor="#000000"
-                android:textSize="22sp" />
-        </androidx.appcompat.widget.Toolbar>
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tvAddressRestaurant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_below="@+id/tvDescriptionRestaurant"
+                android:layout_marginTop="15dp"
+                android:maxHeight="300dp"
+                android:text="Address"
+                android:textColor="#000000"
+                android:textSize="18sp" />
 
-        <ImageView
-            android:id="@+id/ivRestaurantImage"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@+id/toolbarRestaurantDetails"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="34dp"
-            android:layout_marginEnd="20dp"
-            tools:src="@tools:sample/avatars" />
-
-        <RatingBar
-            android:id="@+id/rbVoteAverage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ivRestaurantImage"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="46dp"
-            android:progressBackgroundTint="#ECE5CD"
-            android:progressTint="#F6D52E"
-            android:secondaryProgressTint="#FFFFFF"
-            android:stepSize="0.5" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="40dp"
-            android:text="Button" />
+            <TextView
+                android:id="@+id/tvCommentsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvAddressRestaurant"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="40dp"
+                android:maxHeight="300dp"
+                android:text="Comments"
+                android:textAlignment="center"
+                android:textColor="#3272A5"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
 
-    </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
 
 </FrameLayout>
