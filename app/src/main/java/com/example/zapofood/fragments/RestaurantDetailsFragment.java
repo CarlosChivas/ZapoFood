@@ -12,10 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.zapofood.R;
 import com.example.zapofood.models.Restaurant;
+import com.parse.ParseFile;
 
 public class RestaurantDetailsFragment extends Fragment {
 
@@ -30,6 +35,8 @@ public class RestaurantDetailsFragment extends Fragment {
 
     private TextView tvTitleRestaurant;
     private ImageButton btnBackHome;
+    private ImageView ivRestaurantImage;
+    RatingBar rbVoteAverage;
 
     public static RestaurantDetailsFragment newInstance(Restaurant restaurant) {
         RestaurantDetailsFragment fragmentDemo = new RestaurantDetailsFragment();
@@ -82,6 +89,8 @@ public class RestaurantDetailsFragment extends Fragment {
         Restaurant restaurant = getArguments().getParcelable("restaurant");
         tvTitleRestaurant = view.findViewById(R.id.tvTitlteRestaurant);
         btnBackHome = view.findViewById(R.id.btnBackHome);
+        ivRestaurantImage = view.findViewById(R.id.ivRestaurantImage);
+        rbVoteAverage = view.findViewById(R.id.rbVoteAverage);
         btnBackHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,5 +99,9 @@ public class RestaurantDetailsFragment extends Fragment {
             }
         });
         tvTitleRestaurant.setText(restaurant.getName());
+        ParseFile image = restaurant.getImage();
+        Glide.with(getContext()).load(image.getUrl()).into(ivRestaurantImage);
+        rbVoteAverage.setRating((float) restaurant.getScore());
+        Toast.makeText(getContext(), "Rating " + (float) restaurant.getScore(), Toast.LENGTH_SHORT).show();
     }
 }
