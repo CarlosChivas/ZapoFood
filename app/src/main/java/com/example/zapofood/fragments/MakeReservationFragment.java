@@ -1,6 +1,7 @@
 package com.example.zapofood.fragments;
 
 import android.app.DatePickerDialog;
+import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +18,23 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.zapofood.R;
+import com.example.zapofood.models.Reservation;
 import com.example.zapofood.models.Restaurant;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class MakeReservationFragment extends Fragment {
 
@@ -33,9 +47,11 @@ public class MakeReservationFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    public static final String TAG = "MakeReservationFragment";
     private EditText etSelectDate;
     private ImageButton btnCancelReservation;
     private Button btnReservationDone;
+    private Date reservationDate;
 
     public static MakeReservationFragment newInstance(Restaurant restaurant) {
         MakeReservationFragment fragmentDemo = new MakeReservationFragment();
@@ -90,6 +106,7 @@ public class MakeReservationFragment extends Fragment {
         btnCancelReservation = view.findViewById(R.id.btnCancelReservation);
         btnReservationDone = view.findViewById(R.id.btnReservationDone);
 
+
         btnCancelReservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,13 +126,62 @@ public class MakeReservationFragment extends Fragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month = month+1;
-                        String date = day+"/"+month+"/"+year;
-                        etSelectDate.setText(date);
+                    public void onDateSet(DatePicker view, int newYear, int newMonth, int newDayOfMonth) {
+                        calendar.set(newYear, newMonth, newDayOfMonth, 0, 0);
+                        reservationDate = calendar.getTime();
+                        etSelectDate.setText(newDayOfMonth+"/"+(newMonth+1)+"/"+newYear);
+                        Toast.makeText(getContext(), "Calendar: "+ calendar.getTime().toString(), Toast.LENGTH_SHORT).show();
                     }
-                }, year,month,day);
+                },year,month,day);
                 datePickerDialog.show();
+            }
+        });
+
+        btnReservationDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                String inActiveDate = null;
+
+                inActiveDate = format1.format(date);*/
+
+                //Toast.makeText(getContext(), "Calendar: "+ inActiveDate, Toast.LENGTH_SHORT).show();
+
+                Restaurant restaurant = getArguments().getParcelable("restaurant");
+                Reservation reservation = new Reservation();
+                reservation.setRestaurant(restaurant);
+                reservation.setUser(ParseUser.getCurrentUser());
+                reservation.setDate(reservationDate);
+                reservation.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e != null){
+                            Toast.makeText(getContext(), "Error while saving", Toast.LENGTH_SHORT).show();
+                            Log.i("Saving", "Error: " + e.toString());
+                            return;
+                        }
+                        Toast.makeText(getContext(), "Reservation save was successful!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                /*ParseQuery<Reservation> query = ParseQuery.getQuery(Reservation.class);
+                query.setLimit(20);
+                query.findInBackground(new FindCallback<Reservation>() {
+                    @Override
+                    public void done(List<Reservation> reservations, ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Issue with getting posts", e);
+                            return;
+                        }
+                        ParseObject reservation = null;
+                        try {
+                            reservation = reservations.get(0).getRestaurant().fetchIfNeeded();
+                            Toast.makeText(getContext(), "Reservation: "+ reservation.getString("name"), Toast.LENGTH_SHORT).show();
+                        } catch (ParseException parseException) {
+                            parseException.printStackTrace();
+                        }
+                    }
+                });*/
             }
         });
     }
