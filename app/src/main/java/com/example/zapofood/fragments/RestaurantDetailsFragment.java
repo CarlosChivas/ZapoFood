@@ -39,6 +39,7 @@ public class RestaurantDetailsFragment extends Fragment {
     RatingBar rbVoteAverage;
     private TextView tvDescriptionRestaurant;
     private TextView tvAddressRestaurant;
+    private Button btnMakeReservation;
 
     public static RestaurantDetailsFragment newInstance(Restaurant restaurant) {
         RestaurantDetailsFragment fragmentDemo = new RestaurantDetailsFragment();
@@ -91,6 +92,7 @@ public class RestaurantDetailsFragment extends Fragment {
         Restaurant restaurant = getArguments().getParcelable("restaurant");
         tvTitleRestaurant = view.findViewById(R.id.tvTitlteRestaurant);
         btnBackHome = view.findViewById(R.id.btnBackHome);
+        btnMakeReservation = view.findViewById(R.id.btnMakeReservation);
         ivRestaurantImage = view.findViewById(R.id.ivRestaurantImage);
         rbVoteAverage = view.findViewById(R.id.rbVoteAverage);
         tvDescriptionRestaurant = view.findViewById(R.id.tvDescriptionRestaurant);
@@ -103,6 +105,14 @@ public class RestaurantDetailsFragment extends Fragment {
             }
         });
         tvTitleRestaurant.setText(restaurant.getName());
+        btnMakeReservation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                MakeReservationFragment fragmentDemo = MakeReservationFragment.newInstance(restaurant);
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
+            }
+        });
         ParseFile image = restaurant.getImage();
         Glide.with(getContext()).load(image.getUrl()).into(ivRestaurantImage);
         rbVoteAverage.setRating((float) restaurant.getScore());

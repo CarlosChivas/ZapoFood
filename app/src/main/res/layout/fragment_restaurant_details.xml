@@ -8,7 +8,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="800dp">
+        android:layout_height="wrap_content">
 
         <!-- TODO: Update blank fragment layout -->
         <RelativeLayout
@@ -27,17 +27,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
+                    android:padding="0dp"
                     android:src="@drawable/ic_back_home"
                     app:tint="#000000" />
 
                 <TextView
                     android:id="@+id/tvTitlteRestaurant"
-                    android:layout_width="wrap_content"
+                    android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:text="TextView"
+                    android:textAlignment="center"
                     android:textColor="#000000"
                     android:textSize="22sp" />
+
+                <Button
+                    android:id="@+id/btnMakeReservation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:backgroundTint="#A1D37C"
+                    android:text="Reserve"
+                    android:textSize="10dp"
+                    app:iconPadding="0dp" />
             </androidx.appcompat.widget.Toolbar>
 
             <ImageView
@@ -48,7 +60,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="34dp"
                 android:layout_marginEnd="20dp"
-                tools:src="@tools:sample/avatars" />
+                tools:src="@tools:sample/avatars"
+                />
 
             <RatingBar
                 android:id="@+id/rbVoteAverage"
@@ -72,10 +85,10 @@
                 android:layout_marginEnd="40dp"
                 android:layout_below="@+id/rbVoteAverage"
                 android:layout_marginTop="15dp"
-                android:maxHeight="300dp"
+                android:maxLines="13"
                 android:text="Description"
                 android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
             <TextView
                 android:id="@+id/tvAddressRestaurant"
                 android:layout_width="match_parent"
@@ -87,7 +100,7 @@
                 android:maxHeight="300dp"
                 android:text="Address"
                 android:textColor="#000000"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvCommentsTitle"
