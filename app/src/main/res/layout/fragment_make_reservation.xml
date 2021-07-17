@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,14 +9,62 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarMakeReservation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--<ImageButton
+                android:id="@+id/btnBackReservation"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_back"
+                android:background="#FFFFFF"
+                app:tint="@color/black"/>-->
+
+            <Button
+                android:id="@+id/btnReservationDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#7DBF3B"
+                android:layout_marginStart="80dp"
+                android:text="Done" />
+
+            <ImageButton
+                android:id="@+id/btnCancelReservation"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:background="@drawable/cancel_reservation"
+                android:src="@drawable/ic_baseline_cancel_24"
+                android:layout_marginStart="80dp"
+                app:tint="#FFF9F9" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tvSelectADate"
+            android:layout_below="@id/toolbarMakeReservation"
+            android:layout_width="150dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_height="50dp"
+            android:text="Select a date: "
+            android:textSize="22sp"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:textColor="#000000"/>
 
         <EditText
+            android:id="@+id/etSelectDate"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:id="@+id/etSelectDate"
+            android:layout_below="@id/toolbarMakeReservation"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_toEndOf="@+id/tvSelectADate"
             android:hint="Select date"
-            android:textSize="20sp"
-            />
+            android:textSize="20sp" />
+
     </RelativeLayout>
 
 </FrameLayout>

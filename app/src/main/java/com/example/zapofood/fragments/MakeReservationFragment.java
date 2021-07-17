@@ -6,13 +6,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.zapofood.R;
 import com.example.zapofood.models.Restaurant;
@@ -31,6 +34,8 @@ public class MakeReservationFragment extends Fragment {
     private String mParam2;
 
     private EditText etSelectDate;
+    private ImageButton btnCancelReservation;
+    private Button btnReservationDone;
 
     public static MakeReservationFragment newInstance(Restaurant restaurant) {
         MakeReservationFragment fragmentDemo = new MakeReservationFragment();
@@ -82,6 +87,16 @@ public class MakeReservationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         etSelectDate = view.findViewById(R.id.etSelectDate);
+        btnCancelReservation = view.findViewById(R.id.btnCancelReservation);
+        btnReservationDone = view.findViewById(R.id.btnReservationDone);
+
+        btnCancelReservation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.popBackStack();
+            }
+        });
 
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
