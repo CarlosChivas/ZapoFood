@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp">
+
+
+    <ImageView
+        android:id="@+id/ivReservationImage"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        tools:srcCompat="@tools:sample/avatars"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:id="@+id/tvReservationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Restaurant 2"
+        android:layout_toEndOf="@id/ivReservationImage"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:textSize="25dp"/>
+
+    <TextView
+        android:id="@+id/tvReservationDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvReservationTitle"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toEndOf="@id/ivReservationImage"
+        android:text="July 22" />
+
+    <TextView
+        android:id="@+id/tvReservationTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/tvReservationDate"
+        android:layout_marginStart="3dp"
+        android:layout_below="@id/tvReservationTitle"
+        android:layout_marginTop="15dp"
+        android:text="- 22:00" />
+
+    <ImageButton
+        android:id="@+id/ibReservationDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvReservationDate"
+        android:layout_toEndOf="@id/ivReservationImage"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="15dp"
+        app:srcCompat="@drawable/ic_delete"
+        />
+</RelativeLayout>

@@ -29,6 +29,7 @@ public class Reservation extends ParseObject{
     public void setDate(Date date){
         put(KEY_DATE, date);
     }
+    public Date getDateReservation() {return getDate(KEY_DATE);}
     public ParseObject getRestaurant(){
         return getParseObject("restaurant");
     }
