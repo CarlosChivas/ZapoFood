@@ -2,10 +2,8 @@ package com.example.zapofood;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -16,9 +14,8 @@ import com.example.zapofood.fragments.RestaurantDetailsFragment;
 import com.example.zapofood.fragments.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+public class OwnerMainActivity extends AppCompatActivity {
 
-public class MainActivity extends AppCompatActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     private BottomNavigationView bottomNavigationView;
     @Override
@@ -31,13 +28,13 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
+                Fragment fragment = null;
                 switch (item.getItemId()) {
                     case R.id.action_home:
-                        fragment = new HomeFragment();
+
                         break;
                     case R.id.action_myreservations:
-                        fragment = new MyReservationsFragment();
+
                         break;
                     case R.id.action_user:
                     default:
@@ -49,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // Set default selection
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        bottomNavigationView.setSelectedItemId(R.id.action_user);
     }
+
 }

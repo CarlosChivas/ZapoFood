@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +26,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if(ParseUser.getCurrentUser() != null){
-            goMainActivity();
+          //  Toast.makeText(LoginActivity.this, ParseUser.getCurrentUser().getString("type"), Toast.LENGTH_SHORT);
+            if(ParseUser.getCurrentUser().getString("type").equals("user")){
+                goMainActivity();
+            }
+            else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
+                goOwnerMainActivity();
+            }
         }
 
         etLoginUsername = findViewById(R.id.etLoginUsername);
@@ -51,8 +58,16 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 //Navigate to the main activity if the user has signed in properly
-                goMainActivity();
-                Toast.makeText(LoginActivity.this, "Succes!", Toast.LENGTH_SHORT).show();
+                if(ParseUser.getCurrentUser() != null){
+                    //  Toast.makeText(LoginActivity.this, ParseUser.getCurrentUser().getString("type"), Toast.LENGTH_SHORT);
+                    if(ParseUser.getCurrentUser().getString("type").equals("user")){
+                        goMainActivity();
+                    }
+                    else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
+                        goOwnerMainActivity();
+                    }
+                }
+                Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -60,6 +75,12 @@ public class LoginActivity extends AppCompatActivity {
     //Go to the main activity
     private void goMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void goOwnerMainActivity(){
+        Intent intent = new Intent(this, OwnerMainActivity.class);
         startActivity(intent);
         finish();
     }

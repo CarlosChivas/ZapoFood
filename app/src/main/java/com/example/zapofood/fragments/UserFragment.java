@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +82,12 @@ public class UserFragment extends Fragment {
 
     private void logout(){
         //User will be null
-        ParseUser.logOut();
+        //ParseUser.logOut();
+        ParseUser.logOutInBackground(e -> {
+            if (e == null)
+                Log.i("Logout", "Se supone que ya salió");
+        });
+        //ParseUser.getCurrentUser().logOut();
         Intent i = new Intent(getContext(), LoginActivity.class);
         startActivity(i);
         getActivity().finish();
