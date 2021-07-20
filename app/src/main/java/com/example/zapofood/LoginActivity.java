@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if(ParseUser.getCurrentUser() != null){
-          //  Toast.makeText(LoginActivity.this, ParseUser.getCurrentUser().getString("type"), Toast.LENGTH_SHORT);
             if(ParseUser.getCurrentUser().getString("type").equals("user")){
                 goMainActivity();
             }
@@ -58,14 +57,11 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 //Navigate to the main activity if the user has signed in properly
-                if(ParseUser.getCurrentUser() != null){
-                    //  Toast.makeText(LoginActivity.this, ParseUser.getCurrentUser().getString("type"), Toast.LENGTH_SHORT);
-                    if(ParseUser.getCurrentUser().getString("type").equals("user")){
-                        goMainActivity();
-                    }
-                    else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
-                        goOwnerMainActivity();
-                    }
+                if(ParseUser.getCurrentUser().getString("type").equals("user")){
+                    goMainActivity();
+                }
+                else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
+                    goOwnerMainActivity();
                 }
                 Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
             }
@@ -79,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    //Go to the main activity for owners
     private void goOwnerMainActivity(){
         Intent intent = new Intent(this, OwnerMainActivity.class);
         startActivity(intent);

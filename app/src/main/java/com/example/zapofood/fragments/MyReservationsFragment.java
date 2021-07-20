@@ -29,11 +29,6 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MyReservationsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MyReservationsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -54,14 +49,6 @@ public class MyReservationsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MyReservationsFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static MyReservationsFragment newInstance(String param1, String param2) {
         MyReservationsFragment fragment = new MyReservationsFragment();
@@ -95,12 +82,9 @@ public class MyReservationsFragment extends Fragment {
 
         rvMyReservations = view.findViewById(R.id.rvMyReservations);
         reservationsAdapter = new ReservationsAdapter(getContext(), myReservations);
-        // allows for optimizations
-        //rvRestaurants.setHasFixedSize(true);
         rvMyReservations.setAdapter(reservationsAdapter);
-        // Define 2 column grid layout
         rvMyReservations.setLayoutManager(new LinearLayoutManager(getContext()));
-        //rvRestaurants.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
         //We create a pop-up for the post details
         reservationsAdapter.setOnItemClickListener(new ReservationsAdapter.OnItemClickListener() {
             @Override

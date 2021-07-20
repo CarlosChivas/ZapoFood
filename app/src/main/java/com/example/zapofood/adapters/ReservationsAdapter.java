@@ -69,7 +69,6 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-
         private ImageView ivReservationImage;
         private TextView tvReservationTitle;
         private TextView tvReservationDate;

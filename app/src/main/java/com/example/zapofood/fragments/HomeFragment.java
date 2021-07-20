@@ -84,12 +84,9 @@ public class HomeFragment extends Fragment {
     Toolbar toolbar;
     Toolbar toolbar2;
     private String typeSearch = "location";
-    //final FragmentManager fragmentManager;
-
 
     private FusedLocationProviderClient client;
     private String userCurrentCity;
-
     private LocationRequest mLocationRequest;
 
     public HomeFragment() {
@@ -173,29 +170,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_top_search, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // perform query here
-                fetchRestaurantsName(query);
-                searchView.clearFocus();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-    }*/
 
     private void configToolbar2(Toolbar toolbar2){
         toolbar2.inflateMenu(R.menu.menu_options_search);
@@ -247,7 +221,6 @@ public class HomeFragment extends Fragment {
 
     // Find the user location
     protected void startLocationUpdates() {
-
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -341,6 +314,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
     //Method to find restaurants
     private void fetchRestaurantsScore(int score){
         ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);

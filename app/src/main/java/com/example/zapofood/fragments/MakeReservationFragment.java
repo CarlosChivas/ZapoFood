@@ -65,14 +65,6 @@ public class MakeReservationFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MakeReservationFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static MakeReservationFragment newInstance(String param1, String param2) {
         MakeReservationFragment fragment = new MakeReservationFragment();
@@ -105,7 +97,6 @@ public class MakeReservationFragment extends Fragment {
         etSelectDate = view.findViewById(R.id.etSelectDate);
         btnCancelReservation = view.findViewById(R.id.btnCancelReservation);
         btnReservationDone = view.findViewById(R.id.btnReservationDone);
-
 
         btnCancelReservation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,13 +131,6 @@ public class MakeReservationFragment extends Fragment {
         btnReservationDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-                String inActiveDate = null;
-
-                inActiveDate = format1.format(date);*/
-
-                //Toast.makeText(getContext(), "Calendar: "+ inActiveDate, Toast.LENGTH_SHORT).show();
-
                 Restaurant restaurant = getArguments().getParcelable("restaurant");
                 Reservation reservation = new Reservation();
                 reservation.setRestaurant(restaurant);
@@ -163,25 +147,6 @@ public class MakeReservationFragment extends Fragment {
                         Toast.makeText(getContext(), "Reservation save was successful!!", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-                /*ParseQuery<Reservation> query = ParseQuery.getQuery(Reservation.class);
-                query.setLimit(20);
-                query.findInBackground(new FindCallback<Reservation>() {
-                    @Override
-                    public void done(List<Reservation> reservations, ParseException e) {
-                        if (e != null) {
-                            Log.e(TAG, "Issue with getting posts", e);
-                            return;
-                        }
-                        ParseObject reservation = null;
-                        try {
-                            reservation = reservations.get(0).getRestaurant().fetchIfNeeded();
-                            Toast.makeText(getContext(), "Reservation: "+ reservation.getString("name"), Toast.LENGTH_SHORT).show();
-                        } catch (ParseException parseException) {
-                            parseException.printStackTrace();
-                        }
-                    }
-                });*/
             }
         });
     }

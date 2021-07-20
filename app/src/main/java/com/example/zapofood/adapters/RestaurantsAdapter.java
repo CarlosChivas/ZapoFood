@@ -70,7 +70,6 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-
         private TextView tvItemName;
         private ImageView ivItemImage;
         private View vItemPalette;
