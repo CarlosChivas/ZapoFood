@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,9 +86,11 @@ public class HomeFragment extends Fragment {
     Toolbar toolbar;
     Toolbar toolbar2;
     private String typeSearch = "location";
+    private int score;
+    private RatingBar ratingBar;
 
     private FusedLocationProviderClient client;
-    private String userCurrentCity;
+    private String userCurrentCity = "Guadalajara";
     private LocationRequest mLocationRequest;
 
     public HomeFragment() {
@@ -122,12 +125,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setHasOptionsMenu(true);
 
         rvRestaurants = view.findViewById(R.id.rvRestaurants);
         allRestaurants = new ArrayList<>();
         toolbar2 = (Toolbar) view.findViewById(R.id.toolbarSearchOptions);
         startLocationUpdates();
+        //fetchRestaurantsScore(4);
         toolbar = (Toolbar) view.findViewById(R.id.toolbarSearch);
         configToolbar(toolbar);
         restaurantsAdapter = new RestaurantsAdapter(getContext(), allRestaurants);
@@ -162,7 +165,8 @@ public class HomeFragment extends Fragment {
                         fetchRestaurantsName(objectSearch);
                         break;
                     case "score":
-                        fetchRestaurantsScore(Integer.parseInt(objectSearch));
+                        fetchRestaurantsScore(score);
+                        break;
                     case "location":
                     default:
                         startLocationUpdates();
@@ -173,6 +177,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void configToolbar2(Toolbar toolbar2){
+        Log.i("Testing", "Toolbar 2 selected");
         toolbar2.inflateMenu(R.menu.menu_options_search);
         TextView textViewTitleSearch = toolbar2.findViewById(R.id.tvTitleOptionsSearch);
         textViewTitleSearch.setText("Search by my location (" + userCurrentCity + ")");
@@ -216,6 +221,13 @@ public class HomeFragment extends Fragment {
                     default:
                         toolbar.findViewById(R.id.contentToolbarSearch).setVisibility(View.GONE);
                         toolbar.findViewById(R.id.contentToolbarScore).setVisibility(View.VISIBLE);
+                        ratingBar = toolbar.findViewById(R.id.rbSearchScore);
+                        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                            @Override
+                            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                                score = (int) rating;
+                            }
+                        });
                         item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_name).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_city).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
@@ -327,6 +339,7 @@ public class HomeFragment extends Fragment {
 
     //Method to find restaurants
     private void fetchRestaurantsScore(int score){
+        Log.i("Score", "score: "+score);
         ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);
         query.whereEqualTo(Restaurant.KEY_SCORE, score);
         query.setLimit(20);
@@ -336,9 +349,6 @@ public class HomeFragment extends Fragment {
                 if (e != null) {
                     Log.e(TAG, "Issue with getting posts", e);
                     return;
-                }
-                for (Restaurant restaurant : restaurants) {
-                    Log.i(TAG, "Posts: " + restaurant.getDescription());
                 }
                 allRestaurants.clear();
                 allRestaurants.addAll(restaurants);
