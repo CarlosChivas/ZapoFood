@@ -13,6 +13,7 @@ public class Restaurant extends ParseObject {
     public static final String KEY_CITY = "city";
     public static final String KEY_SCORE = "score";
     public static final String KEY_ADDRESS = "address";
+    public static final String KEY_OWNER = "owner";
 
     public String getDescription(){
         return getString(KEY_DESCRIPTION);
@@ -24,5 +25,6 @@ public class Restaurant extends ParseObject {
     public String getCity(){return getString(KEY_CITY);}
     public int getScore(){return getInt(KEY_SCORE);}
     public String getAddress(){ return getString(KEY_ADDRESS); }
+    public ParseUser getOwner() { return getParseUser(KEY_OWNER);}
 
 }

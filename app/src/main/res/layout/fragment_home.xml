@@ -20,23 +20,15 @@
             app:contentInsetStart="0dp"
             app:title=" ">
 
-            <EditText
-                android:id="@+id/etSearch"
-                android:layout_width="315dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="0dp"
-                android:background="@drawable/custom_search"
-                android:hint="Search"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp" />
+            <include
+                android:id="@+id/contentToolbarSearch"
+                android:visibility="gone"
+                layout="@layout/search_view"/>
+            <include
+                android:id="@+id/contentToolbarScore"
+                android:visibility="gone"
+                layout="@layout/search_score"/>
 
-            <ImageButton
-                android:id="@+id/ibSearch"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="15dp"
-                android:background="@color/white"
-                android:src="@drawable/ic_search_black_24dp" />
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.appcompat.widget.Toolbar

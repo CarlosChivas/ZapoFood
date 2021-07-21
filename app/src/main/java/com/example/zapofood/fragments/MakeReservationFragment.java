@@ -145,6 +145,8 @@ public class MakeReservationFragment extends Fragment {
                             return;
                         }
                         Toast.makeText(getContext(), "Reservation save was successful!!", Toast.LENGTH_SHORT).show();
+                        FragmentManager fragmentManager = getParentFragmentManager();
+                        fragmentManager.popBackStack();
                     }
                 });
             }

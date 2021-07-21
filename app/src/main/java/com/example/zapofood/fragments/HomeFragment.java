@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -176,11 +177,14 @@ public class HomeFragment extends Fragment {
         TextView textViewTitleSearch = toolbar2.findViewById(R.id.tvTitleOptionsSearch);
         textViewTitleSearch.setText("Search by my location (" + userCurrentCity + ")");
         toolbar2.getMenu().findItem(R.id.action_search_location).getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
-
+        toolbar.setTitle("Automatic");
         toolbar2.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_search_location:
+                        toolbar.findViewById(R.id.contentToolbarSearch).setVisibility(View.GONE);
+                        toolbar.findViewById(R.id.contentToolbarScore).setVisibility(View.GONE);
+                        toolbar.setTitle("Automatic");
                         item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_name).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_score).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
@@ -189,6 +193,8 @@ public class HomeFragment extends Fragment {
                         typeSearch = "location";
                         break;
                     case R.id.action_search_city:
+                        toolbar.findViewById(R.id.contentToolbarSearch).setVisibility(View.VISIBLE);
+                        toolbar.findViewById(R.id.contentToolbarScore).setVisibility(View.GONE);
                         item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_name).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_score).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
@@ -197,6 +203,8 @@ public class HomeFragment extends Fragment {
                         typeSearch = "city";
                         break;
                     case R.id.action_search_name:
+                        toolbar.findViewById(R.id.contentToolbarSearch).setVisibility(View.VISIBLE);
+                        toolbar.findViewById(R.id.contentToolbarScore).setVisibility(View.GONE);
                         item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_city).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_score).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
@@ -206,6 +214,8 @@ public class HomeFragment extends Fragment {
                         break;
                     case R.id.action_search_score:
                     default:
+                        toolbar.findViewById(R.id.contentToolbarSearch).setVisibility(View.GONE);
+                        toolbar.findViewById(R.id.contentToolbarScore).setVisibility(View.VISIBLE);
                         item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_name).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_city).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
