@@ -21,14 +21,14 @@
             app:title=" ">
 
             <include
-                android:id="@+id/contentToolbarScore"
-                android:visibility="gone"
-                layout="@layout/search_score"/>
-
-            <include
                 android:id="@+id/contentToolbarSearch"
                 android:visibility="gone"
                 layout="@layout/search_view"/>
+
+            <include
+                android:id="@+id/contentToolbarScore"
+                android:visibility="gone"
+                layout="@layout/search_score"/>
 
         </androidx.appcompat.widget.Toolbar>
 

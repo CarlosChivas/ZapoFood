@@ -228,6 +228,13 @@ public class HomeFragment extends Fragment {
                                 score = (int) rating;
                             }
                         });
+                        ImageButton searchScore = toolbar.findViewById(R.id.ibSearchScore);
+                        searchScore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                fetchRestaurantsScore(score);
+                            }
+                        });
                         item.getIcon().setColorFilter(Color.rgb(255, 127, 35), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_name).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
                         toolbar2.getMenu().findItem(R.id.action_search_city).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
@@ -318,7 +325,9 @@ public class HomeFragment extends Fragment {
     //Method to find restaurants
     private void fetchRestaurantsName(String name){
         ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);
-        query.whereEqualTo(Restaurant.KEY_NAME, name);
+        //query.whereEqualTo(Restaurant.KEY_NAME, name);
+        //query.whereContains("name", name);
+        query.whereMatches("name", "("+name+")", "i");
         query.setLimit(20);
         query.findInBackground(new FindCallback<Restaurant>() {
             @Override
