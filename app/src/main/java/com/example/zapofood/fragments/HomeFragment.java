@@ -303,7 +303,8 @@ public class HomeFragment extends Fragment {
     //Method to get the Restaurants
     protected void queryRestaurants(String city) {
         ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);
-        query.whereEqualTo(Restaurant.KEY_CITY, city);
+        //query.whereEqualTo(Restaurant.KEY_CITY, city);
+        query.whereMatches("city", "("+city+")", "i");
         query.setLimit(20);
         query.findInBackground(new FindCallback<Restaurant>() {
             @Override
