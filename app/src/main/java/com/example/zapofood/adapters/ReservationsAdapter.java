@@ -102,6 +102,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dateReservation);
         tvReservationDate.setText(month(calendar.get(Calendar.MONTH)) + " " + calendar.get(Calendar.DAY_OF_MONTH));
+        Log.i("Dates", "Dates: "+calendar.getTime().toString());
     }
 
     private String month(int num){

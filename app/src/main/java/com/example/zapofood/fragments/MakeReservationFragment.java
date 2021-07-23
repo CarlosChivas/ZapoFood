@@ -1,6 +1,7 @@
 package com.example.zapofood.fragments;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.graphics.Point;
 import android.os.Bundle;
 
@@ -18,6 +19,8 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.zapofood.R;
@@ -30,6 +33,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -48,10 +52,14 @@ public class MakeReservationFragment extends Fragment {
     private String mParam2;
 
     public static final String TAG = "MakeReservationFragment";
-    private EditText etSelectDate;
+    private TextView tvSelectDate;
+    private ImageButton ibSelectDate;
     private ImageButton btnCancelReservation;
     private Button btnReservationDone;
     private Date reservationDate;
+    private TextView tvSelectTime;
+    private ImageButton ibSelectTime;
+    private int hourDate, minuteDate;
 
     public static MakeReservationFragment newInstance(Restaurant restaurant) {
         MakeReservationFragment fragmentDemo = new MakeReservationFragment();
@@ -94,10 +102,35 @@ public class MakeReservationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        etSelectDate = view.findViewById(R.id.etSelectDate);
+        tvSelectDate = view.findViewById(R.id.tvSelectDate);
+        ibSelectDate = view.findViewById(R.id.btnSelectDate);
         btnCancelReservation = view.findViewById(R.id.btnCancelReservation);
         btnReservationDone = view.findViewById(R.id.btnReservationDone);
-
+        tvSelectTime = view.findViewById(R.id.tvTime);
+        ibSelectTime = view.findViewById(R.id.btnSelectTime);
+        ibSelectTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Initialize time picker dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(
+                        getContext(),
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                hourDate = hourOfDay;
+                                minuteDate = minute;
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.set(0,0,0, hourDate, minuteDate);
+                                tvSelectTime.setText(android.text.format.DateFormat.format("hh:mm aa", calendar));
+                            }
+                        }, 12, 0, false
+                );
+                //Displayed previous selected time
+                timePickerDialog.updateTime(hourDate, minuteDate);
+                //Show dialog
+                timePickerDialog.show();
+            }
+        });
         btnCancelReservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +144,7 @@ public class MakeReservationFragment extends Fragment {
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        etSelectDate.setOnClickListener(new View.OnClickListener() {
+        ibSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
@@ -120,7 +153,7 @@ public class MakeReservationFragment extends Fragment {
                     public void onDateSet(DatePicker view, int newYear, int newMonth, int newDayOfMonth) {
                         calendar.set(newYear, newMonth, newDayOfMonth, 0, 0);
                         reservationDate = calendar.getTime();
-                        etSelectDate.setText(newDayOfMonth+"/"+(newMonth+1)+"/"+newYear);
+                        tvSelectDate.setText(newDayOfMonth+"/"+(newMonth+1)+"/"+newYear);
                         Toast.makeText(getContext(), "Calendar: "+ calendar.getTime().toString(), Toast.LENGTH_SHORT).show();
                     }
                 },year,month,day);

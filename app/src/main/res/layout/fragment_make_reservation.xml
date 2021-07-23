@@ -44,19 +44,19 @@
         <TextView
             android:id="@+id/tvSelectADate"
             android:layout_below="@id/toolbarMakeReservation"
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:layout_marginTop="40dp"
             android:layout_marginStart="10dp"
             android:layout_height="50dp"
-            android:text="Select a date: "
+            android:text="Date: "
             android:textSize="22sp"
             android:padding="5dp"
             android:textAlignment="center"
             android:textColor="#000000"/>
 
-        <EditText
-            android:id="@+id/etSelectDate"
-            android:layout_width="200dp"
+        <TextView
+            android:id="@+id/tvSelectDate"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbarMakeReservation"
             android:layout_marginStart="10dp"
@@ -64,6 +64,58 @@
             android:layout_toEndOf="@+id/tvSelectADate"
             android:hint="Select date"
             android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/btnSelectDate"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_calendar"
+            android:layout_toEndOf="@id/tvSelectDate"
+            android:layout_below="@id/toolbarMakeReservation"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/select_date"
+            app:tint="#000000"/>
+
+        <TextView
+            android:id="@+id/tvSelectTime"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="Time"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:drawablePadding="16dp"
+            android:layout_below="@id/tvSelectDate"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:hint="Select time"
+            android:textSize="20sp"
+            android:drawablePadding="16dp"
+            android:layout_below="@id/tvSelectDate"
+            android:layout_toEndOf="@+id/tvSelectTime"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"/>
+
+
+        <ImageButton
+            android:id="@+id/btnSelectTime"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/tvSelectDate"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_toEndOf="@id/tvTime"
+            android:background="@drawable/select_date"
+            app:tint="#000000"
+            android:src="@drawable/ic_time"
+            />
+
 
     </RelativeLayout>
 
