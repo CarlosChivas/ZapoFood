@@ -108,7 +108,6 @@ public class RestaurantDetailsFragment extends Fragment {
         ParseFile image = restaurant.getImage();
         Glide.with(getContext()).load(image.getUrl()).into(ivRestaurantImage);
         rbVoteAverage.setRating((float) restaurant.getScore());
-        Toast.makeText(getContext(), "Rating " + (float) restaurant.getScore(), Toast.LENGTH_SHORT).show();
         tvDescriptionRestaurant.setText(restaurant.getDescription());
         tvAddressRestaurant.setText(restaurant.getAddress());
     }

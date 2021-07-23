@@ -24,7 +24,8 @@
         android:layout_toEndOf="@id/ivReservationImage"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:textSize="25dp"/>
+        android:textSize="25dp"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/tvReservationDate"
@@ -34,6 +35,9 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="15dp"
         android:layout_toEndOf="@id/ivReservationImage"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:text="July 22" />
 
     <TextView
@@ -43,17 +47,18 @@
         android:layout_toEndOf="@id/tvReservationDate"
         android:layout_marginStart="3dp"
         android:layout_below="@id/tvReservationTitle"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="17dp"
         android:text="- 22:00" />
 
     <ImageButton
         android:id="@+id/ibReservationDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_below="@id/tvReservationDate"
-        android:layout_toEndOf="@id/ivReservationImage"
-        android:layout_marginStart="100dp"
+        android:layout_marginStart="80dp"
         android:layout_marginTop="15dp"
-        app:srcCompat="@drawable/ic_delete"
-        />
+        android:layout_toEndOf="@id/ivReservationImage"
+        android:background="@drawable/cancel_reservation"
+        app:tint="#FFFEFE"
+        app:srcCompat="@drawable/ic_delete" />
 </RelativeLayout>

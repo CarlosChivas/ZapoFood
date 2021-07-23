@@ -61,6 +61,11 @@ public class MakeReservationFragment extends Fragment {
     private ImageButton ibSelectTime;
     private int hourDate, minuteDate;
 
+    Calendar calendar = Calendar.getInstance();
+    int year = calendar.get(Calendar.YEAR);
+    int month = calendar.get(Calendar.MONTH);
+    int day = calendar.get(Calendar.DAY_OF_MONTH);
+
     public static MakeReservationFragment newInstance(Restaurant restaurant) {
         MakeReservationFragment fragmentDemo = new MakeReservationFragment();
         Bundle args = new Bundle();
@@ -139,10 +144,6 @@ public class MakeReservationFragment extends Fragment {
             }
         });
 
-        Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         ibSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,10 +152,10 @@ public class MakeReservationFragment extends Fragment {
                         getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int newYear, int newMonth, int newDayOfMonth) {
-                        calendar.set(newYear, newMonth, newDayOfMonth, 0, 0);
-                        reservationDate = calendar.getTime();
+                        year = newYear;
+                        month = newMonth;
+                        day = newDayOfMonth;
                         tvSelectDate.setText(newDayOfMonth+"/"+(newMonth+1)+"/"+newYear);
-                        Toast.makeText(getContext(), "Calendar: "+ calendar.getTime().toString(), Toast.LENGTH_SHORT).show();
                     }
                 },year,month,day);
                 datePickerDialog.show();
@@ -168,7 +169,8 @@ public class MakeReservationFragment extends Fragment {
                 Reservation reservation = new Reservation();
                 reservation.setRestaurant(restaurant);
                 reservation.setUser(ParseUser.getCurrentUser());
-                reservation.setDate(reservationDate);
+                calendar.set(year, month, day, hourDate, minuteDate);
+                reservation.setDate(calendar.getTime());
                 reservation.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
