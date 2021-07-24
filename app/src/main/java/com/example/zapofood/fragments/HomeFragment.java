@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.parse.FindCallback;
@@ -92,6 +95,8 @@ public class HomeFragment extends Fragment {
     private FusedLocationProviderClient client;
     private String userCurrentCity = "Guadalajara";
     private LocationRequest mLocationRequest;
+
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -250,54 +255,29 @@ public class HomeFragment extends Fragment {
 
     // Find the user location
     protected void startLocationUpdates() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        // Create LocationSettingsRequest object using location request
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        LocationSettingsRequest locationSettingsRequest = builder.build();
-
-        // Check whether location settings are satisfied
-        SettingsClient settingsClient = LocationServices.getSettingsClient(getContext());
-        settingsClient.checkLocationSettings(locationSettingsRequest);
-
-        // We need check of we have the permissions
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-                    getFusedLocationProviderClient(getContext()).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                        @Override
-                        public void onLocationResult(LocationResult locationResult) {
-                            String userCity = getCity(getContext(), locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
-                            if(userCity != null){
-                                userCurrentCity = userCity;
-                                configToolbar2(toolbar2);
-                                queryRestaurants(userCity.toUpperCase());
-                            }
-                            else {
-                                Toast.makeText(getContext(), "Error to get the current city", Toast.LENGTH_SHORT).show();
-                            }
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    Location location = task.getResult();
+                    if (location != null) {
+                        try {
+                            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                            //Initialize address list
+                            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            Toast.makeText(getContext(), addresses.get(0).getLocality()/*getAddressLine(0)*/, Toast.LENGTH_SHORT).show();
+                            configToolbar2(toolbar2);
+                            userCurrentCity = addresses.get(0).getLocality();
+                            queryRestaurants(userCurrentCity.toUpperCase());
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    }, Looper.myLooper());
+                    }
+                }
+            });
         }
-    }
-
-    //Method for get user city
-    public static String getCity(Context context, double latitude, double longitude) {
-        try {
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses != null && addresses.size() > 0) {
-                String city = addresses.get(0).getLocality();
-                Toast.makeText(context.getApplicationContext(), city, Toast.LENGTH_SHORT).show();
-                return city;
-            }
-        } catch (IOException e) {
-            Log.i("Location", "Error with the address" + e);
-            e.printStackTrace();
-        }
-        return null;
     }
 
     //Method to get the Restaurants

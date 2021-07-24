@@ -1,9 +1,17 @@
 package com.example.zapofood.fragments;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -20,7 +28,15 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.zapofood.R;
 import com.example.zapofood.models.Restaurant;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.parse.ParseFile;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class RestaurantDetailsFragment extends Fragment {
 
@@ -40,6 +56,8 @@ public class RestaurantDetailsFragment extends Fragment {
     private TextView tvDescriptionRestaurant;
     private TextView tvAddressRestaurant;
     private Button btnMakeReservation;
+    private ImageButton ibShowLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     public static RestaurantDetailsFragment newInstance(Restaurant restaurant) {
         RestaurantDetailsFragment fragmentDemo = new RestaurantDetailsFragment();
@@ -89,6 +107,8 @@ public class RestaurantDetailsFragment extends Fragment {
         rbVoteAverage = view.findViewById(R.id.rbVoteAverage);
         tvDescriptionRestaurant = view.findViewById(R.id.tvDescriptionRestaurant);
         tvAddressRestaurant = view.findViewById(R.id.tvAddressRestaurant);
+        ibShowLocation = view.findViewById(R.id.ibShowLocation);
+
         btnBackHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,10 +125,50 @@ public class RestaurantDetailsFragment extends Fragment {
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });
+
+        ibShowLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLocation();
+                /*
+                Uri uri = Uri.parse("https://www.google.co.in/maps/dir/2960 N Shoreline Blvd, Mountain View, CA 94043, United States/425 N Whisman Rd, Mountain View, CA 94043, United States");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.setPackage("com.google.android.apps.maps");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);*/
+            }
+        });
         ParseFile image = restaurant.getImage();
         Glide.with(getContext()).load(image.getUrl()).into(ivRestaurantImage);
         rbVoteAverage.setRating((float) restaurant.getScore());
         tvDescriptionRestaurant.setText(restaurant.getDescription());
         tvAddressRestaurant.setText(restaurant.getAddress());
+    }
+
+    public void getLocation(){
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+        if(ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    Location location = task.getResult();
+                    if(location != null){
+                        try {
+                            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                            //Initialize address list
+                            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            Toast.makeText(getContext(), "Address: " + addresses.get(0).getLocality()/*getAddressLine(0)*/, Toast.LENGTH_SHORT).show();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }else {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+        }
     }
 }
