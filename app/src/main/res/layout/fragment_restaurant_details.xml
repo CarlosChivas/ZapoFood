@@ -88,7 +88,7 @@
                 app:tint="#FFF9F9"/>
 
             <TextView
-                android:id="@+id/tvDescriptionRestaurant"
+                android:id="@+id/tvTitleDescriptionRestaurant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
@@ -97,10 +97,23 @@
                 android:layout_marginTop="15dp"
                 android:maxLines="13"
                 android:text="Description"
-                android:textColor="#000000"
-                android:textSize="18sp" />
+                android:textSize="16sp"
+                android:textColor="#000000"/>
+
             <TextView
-                android:id="@+id/tvAddressRestaurant"
+                android:id="@+id/tvDescriptionRestaurant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="40dp"
+                android:layout_below="@+id/tvTitleDescriptionRestaurant"
+                android:layout_marginTop="15dp"
+                android:maxLines="10"
+                android:text="Description"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvTitleAddressRestaurant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
@@ -111,6 +124,18 @@
                 android:text="Address"
                 android:textColor="#000000"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvAddressRestaurant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="40dp"
+                android:layout_below="@+id/tvTitleAddressRestaurant"
+                android:layout_marginTop="15dp"
+                android:maxHeight="300dp"
+                android:text="Address"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvCommentsTitle"
