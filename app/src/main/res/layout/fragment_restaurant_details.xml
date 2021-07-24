@@ -138,19 +138,52 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/tvTitleFoodType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_below="@+id/tvAddressRestaurant"
+                android:layout_marginTop="15dp"
+                android:maxHeight="300dp"
+                android:text="Food Type"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvFoodType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="40dp"
+                android:layout_below="@+id/tvTitleFoodType"
+                android:layout_marginTop="15dp"
+                android:maxHeight="300dp"
+                android:text="Mexican"
+                android:textSize="14sp" />
+
+            <TextView
                 android:id="@+id/tvCommentsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvAddressRestaurant"
+                android:layout_below="@+id/tvFoodType"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="40dp"
                 android:maxHeight="300dp"
-                android:text="Comments"
+                android:text="Reviews"
                 android:textAlignment="center"
                 android:textColor="#3272A5"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvReviews"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_below="@id/tvCommentsTitle"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"/>
 
 
         </RelativeLayout>

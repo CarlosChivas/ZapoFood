@@ -14,7 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,14 +30,22 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.zapofood.R;
+import com.example.zapofood.adapters.ReviewsAdapter;
+import com.example.zapofood.models.Reservation;
 import com.example.zapofood.models.Restaurant;
+import com.example.zapofood.models.Review;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,6 +69,10 @@ public class RestaurantDetailsFragment extends Fragment {
     private Button btnMakeReservation;
     private ImageButton ibShowLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private List<Review> reviews;
+    private RecyclerView rvReviews;
+    private ReviewsAdapter reviewsAdapter;
+    private Restaurant restaurant;
 
     public static RestaurantDetailsFragment newInstance(Restaurant restaurant, Address address) {
         RestaurantDetailsFragment fragmentDemo = new RestaurantDetailsFragment();
@@ -100,7 +115,7 @@ public class RestaurantDetailsFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Restaurant restaurant = getArguments().getParcelable("restaurant");
+        restaurant = getArguments().getParcelable("restaurant");
         tvTitleRestaurant = view.findViewById(R.id.tvTitlteRestaurant);
         btnBackHome = view.findViewById(R.id.btnBackHome);
         btnMakeReservation = view.findViewById(R.id.btnMakeReservation);
@@ -109,6 +124,7 @@ public class RestaurantDetailsFragment extends Fragment {
         tvDescriptionRestaurant = view.findViewById(R.id.tvDescriptionRestaurant);
         tvAddressRestaurant = view.findViewById(R.id.tvAddressRestaurant);
         ibShowLocation = view.findViewById(R.id.ibShowLocation);
+        rvReviews = view.findViewById(R.id.rvReviews);
 
         btnBackHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +160,12 @@ public class RestaurantDetailsFragment extends Fragment {
         rbVoteAverage.setRating((float) restaurant.getScore());
         tvDescriptionRestaurant.setText(restaurant.getDescription());
         tvAddressRestaurant.setText(restaurant.getAddress());
+
+        reviews = new ArrayList<>();
+        reviewsAdapter = new ReviewsAdapter(getContext(), reviews);
+        rvReviews.setAdapter(reviewsAdapter);
+        rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
+        getReviews();
     }
 
     public void getLocation(){
@@ -171,5 +193,40 @@ public class RestaurantDetailsFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
         }
+    }
+
+    public void getReviews(){
+        ParseQuery<Review> query = ParseQuery.getQuery(Review.class);
+        query.whereEqualTo(Review.KEY_RESTAURANT, restaurant);
+        query.setLimit(10);
+        query.findInBackground(new FindCallback<Review>() {
+            @Override
+            public void done(List<Review> objects, ParseException e) {
+                if (e != null) {
+                    return;
+                }
+                Log.i("Test", "Size reservations: " + objects.size());
+                reviews.clear();
+                reviews.addAll(objects);
+                reviewsAdapter.notifyDataSetChanged();
+            }
+        });
+        /*
+        ParseQuery<Review> query = ParseQuery.getQuery(Review.class);
+        query.whereEqualTo(Review.KEY_RESTAURANT, restaurant);
+        query.setLimit(10);
+        query.findInBackground(new FindCallback<Review>() {
+            @Override
+            public void done(List<Review> objects, ParseException e) {
+                if(e != null){
+                    Toast.makeText(getContext(), "Error with the reviews", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Log.i("Reviews", "Size: " + reviews.size());
+                reviews.clear();
+                reviews.addAll(objects);
+                reviewsAdapter.notifyDataSetChanged();
+            }
+        });*/
     }
 }

@@ -270,8 +270,8 @@ public class HomeFragment extends Fragment {
                             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                             Toast.makeText(getContext(), addresses.get(0).getLocality()/*getAddressLine(0)*/, Toast.LENGTH_SHORT).show();
                             userAddress = addresses.get(0);
-                            configToolbar2(toolbar2);
                             userCurrentCity = addresses.get(0).getLocality();
+                            configToolbar2(toolbar2);
                             queryRestaurants(userCurrentCity.toUpperCase());
                         } catch (IOException e) {
                             e.printStackTrace();
