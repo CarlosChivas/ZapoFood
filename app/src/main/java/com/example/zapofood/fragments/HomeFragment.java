@@ -97,6 +97,7 @@ public class HomeFragment extends Fragment {
     private LocationRequest mLocationRequest;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private Address userAddress;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -149,7 +150,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(View itemView, int position) {
                 final FragmentManager fragmentManager = getParentFragmentManager();
-                RestaurantDetailsFragment fragmentDemo = RestaurantDetailsFragment.newInstance(allRestaurants.get(position));
+                RestaurantDetailsFragment fragmentDemo = RestaurantDetailsFragment.newInstance(allRestaurants.get(position), userAddress);
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });
@@ -268,6 +269,7 @@ public class HomeFragment extends Fragment {
                             //Initialize address list
                             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                             Toast.makeText(getContext(), addresses.get(0).getLocality()/*getAddressLine(0)*/, Toast.LENGTH_SHORT).show();
+                            userAddress = addresses.get(0);
                             configToolbar2(toolbar2);
                             userCurrentCity = addresses.get(0).getLocality();
                             queryRestaurants(userCurrentCity.toUpperCase());

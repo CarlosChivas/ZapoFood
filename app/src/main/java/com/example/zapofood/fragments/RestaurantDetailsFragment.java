@@ -59,10 +59,11 @@ public class RestaurantDetailsFragment extends Fragment {
     private ImageButton ibShowLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    public static RestaurantDetailsFragment newInstance(Restaurant restaurant) {
+    public static RestaurantDetailsFragment newInstance(Restaurant restaurant, Address address) {
         RestaurantDetailsFragment fragmentDemo = new RestaurantDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable("restaurant", restaurant);
+        args.putParcelable("address", address);
         fragmentDemo.setArguments(args);
         return fragmentDemo;
     }
@@ -130,12 +131,12 @@ public class RestaurantDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getLocation();
-                /*
-                Uri uri = Uri.parse("https://www.google.co.in/maps/dir/2960 N Shoreline Blvd, Mountain View, CA 94043, United States/425 N Whisman Rd, Mountain View, CA 94043, United States");
+                Address userAddress = getArguments().getParcelable("address");
+                Uri uri = Uri.parse("https://www.google.co.in/maps/dir/"+ restaurant.getAddress() + "/"+userAddress.getAddressLine(0));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.setPackage("com.google.android.apps.maps");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
         ParseFile image = restaurant.getImage();
