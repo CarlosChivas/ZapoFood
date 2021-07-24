@@ -79,10 +79,13 @@
 
             <ImageButton
                 android:id="@+id/ibShowLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_restaurant_location"
-                android:layout_below="@id/rbVoteAverage"/>
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_navigation"
+                android:layout_below="@id/rbVoteAverage"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/navigation_restaurant"
+                app:tint="#FFF9F9"/>
 
             <TextView
                 android:id="@+id/tvDescriptionRestaurant"
@@ -90,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
-                android:layout_below="@+id/rbVoteAverage"
+                android:layout_below="@+id/ibShowLocation"
                 android:layout_marginTop="15dp"
                 android:maxLines="13"
                 android:text="Description"
