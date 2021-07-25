@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -77,6 +78,8 @@ public class RestaurantDetailsFragment extends Fragment {
     private Restaurant restaurant;
     private ImageButton btnSendReview;
     private EditText etTextReview;
+    AlertDialog.Builder dialogBuilder;
+    AlertDialog dialog;
 
     public static RestaurantDetailsFragment newInstance(Restaurant restaurant, Address address) {
         RestaurantDetailsFragment fragmentDemo = new RestaurantDetailsFragment();
@@ -180,7 +183,7 @@ public class RestaurantDetailsFragment extends Fragment {
                 if(textReview.isEmpty()){
                     Toast.makeText(getContext(), "Review is empty", Toast.LENGTH_SHORT).show();
                 }else {
-                    sendReview(textReview);
+                    confirmSendReview(textReview);
                 }
             }
         });
@@ -246,6 +249,34 @@ public class RestaurantDetailsFragment extends Fragment {
                 reviews.add(review);
                 reviewsAdapter.notifyItemInserted(reviews.size()-1);
                 etTextReview.setText("");
+            }
+        });
+    }
+
+    public void confirmSendReview(String textReview) {
+        dialogBuilder = new AlertDialog.Builder(getContext());
+        final View deleteReservationView = LayoutInflater.from(getContext()).inflate(R.layout.confirm_review, null);
+        Button btnConfirmReview;
+        Button btnCancelReview;
+
+        btnConfirmReview = deleteReservationView.findViewById(R.id.btnConfirmReview);
+        btnCancelReview = deleteReservationView.findViewById(R.id.btnCancelReview);
+
+        dialogBuilder.setView(deleteReservationView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        btnConfirmReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendReview(textReview);
+                dialog.dismiss();
+            }
+        });
+        btnCancelReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
     }
