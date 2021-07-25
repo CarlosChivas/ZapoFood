@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -43,6 +44,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,6 +75,8 @@ public class RestaurantDetailsFragment extends Fragment {
     private RecyclerView rvReviews;
     private ReviewsAdapter reviewsAdapter;
     private Restaurant restaurant;
+    private ImageButton btnSendReview;
+    private EditText etTextReview;
 
     public static RestaurantDetailsFragment newInstance(Restaurant restaurant, Address address) {
         RestaurantDetailsFragment fragmentDemo = new RestaurantDetailsFragment();
@@ -125,6 +129,8 @@ public class RestaurantDetailsFragment extends Fragment {
         tvAddressRestaurant = view.findViewById(R.id.tvAddressRestaurant);
         ibShowLocation = view.findViewById(R.id.ibShowLocation);
         rvReviews = view.findViewById(R.id.rvReviews);
+        etTextReview = view.findViewById(R.id.etTextReview);
+        btnSendReview = view.findViewById(R.id.btnSendReview);
 
         btnBackHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +172,18 @@ public class RestaurantDetailsFragment extends Fragment {
         rvReviews.setAdapter(reviewsAdapter);
         rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
         getReviews();
+
+        btnSendReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String textReview = etTextReview.getText().toString();
+                if(textReview.isEmpty()){
+                    Toast.makeText(getContext(), "Review is empty", Toast.LENGTH_SHORT).show();
+                }else {
+                    sendReview(textReview);
+                }
+            }
+        });
     }
 
     public void getLocation(){
@@ -182,7 +200,6 @@ public class RestaurantDetailsFragment extends Fragment {
                             //Initialize address list
                             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                             Toast.makeText(getContext(), "Address: " + addresses.get(0).getLocality()/*getAddressLine(0)*/, Toast.LENGTH_SHORT).show();
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -211,22 +228,25 @@ public class RestaurantDetailsFragment extends Fragment {
                 reviewsAdapter.notifyDataSetChanged();
             }
         });
-        /*
-        ParseQuery<Review> query = ParseQuery.getQuery(Review.class);
-        query.whereEqualTo(Review.KEY_RESTAURANT, restaurant);
-        query.setLimit(10);
-        query.findInBackground(new FindCallback<Review>() {
+    }
+
+    public void sendReview(String textReview){
+        Review review = new Review();
+        review.setRestaurant(restaurant);
+        review.setUser(ParseUser.getCurrentUser());
+        review.setText(textReview);
+        review.saveInBackground(new SaveCallback() {
             @Override
-            public void done(List<Review> objects, ParseException e) {
+            public void done(ParseException e) {
                 if(e != null){
-                    Toast.makeText(getContext(), "Error with the reviews", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Error saving the review", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Log.i("Reviews", "Size: " + reviews.size());
-                reviews.clear();
-                reviews.addAll(objects);
-                reviewsAdapter.notifyDataSetChanged();
+                Toast.makeText(getContext(), "Review save was successful", Toast.LENGTH_SHORT).show();
+                reviews.add(review);
+                reviewsAdapter.notifyItemInserted(reviews.size()-1);
+                etTextReview.setText("");
             }
-        });*/
+        });
     }
 }
