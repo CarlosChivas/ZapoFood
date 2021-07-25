@@ -19,15 +19,18 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.zapofood.R;
 import com.example.zapofood.models.Reservation;
 import com.example.zapofood.models.Restaurant;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -60,6 +63,9 @@ public class MakeReservationFragment extends Fragment {
     private TextView tvSelectTime;
     private ImageButton ibSelectTime;
     private int hourDate, minuteDate;
+    private ImageView ivImageMakeReservation;
+    private TextView tvNameMakeReservation;
+    Restaurant restaurant;
 
     Calendar calendar = Calendar.getInstance();
     int year = calendar.get(Calendar.YEAR);
@@ -113,6 +119,15 @@ public class MakeReservationFragment extends Fragment {
         btnReservationDone = view.findViewById(R.id.btnReservationDone);
         tvSelectTime = view.findViewById(R.id.tvTime);
         ibSelectTime = view.findViewById(R.id.btnSelectTime);
+        ivImageMakeReservation = view.findViewById(R.id.ivImageMakeReservation);
+        tvNameMakeReservation = view.findViewById(R.id.tvNameMakeReservation);
+
+        restaurant = getArguments().getParcelable("restaurant");
+
+        ParseFile image = restaurant.getImage();
+        Glide.with(getContext()).load(image.getUrl()).into(ivImageMakeReservation);
+        tvNameMakeReservation.setText(restaurant.getName());
+
         ibSelectTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +180,6 @@ public class MakeReservationFragment extends Fragment {
         btnReservationDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Restaurant restaurant = getArguments().getParcelable("restaurant");
                 Reservation reservation = new Reservation();
                 reservation.setRestaurant(restaurant);
                 reservation.setUser(ParseUser.getCurrentUser());
