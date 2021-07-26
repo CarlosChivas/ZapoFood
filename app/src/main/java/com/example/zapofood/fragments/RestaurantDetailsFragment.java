@@ -155,7 +155,7 @@ public class RestaurantDetailsFragment extends Fragment {
         ibShowLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getLocation();
+                //getLocation();
                 Address userAddress = getArguments().getParcelable("address");
                 Uri uri = Uri.parse("https://www.google.co.in/maps/dir/"+ restaurant.getAddress() + "/"+userAddress.getAddressLine(0));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);

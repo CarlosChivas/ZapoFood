@@ -51,6 +51,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -162,7 +164,6 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 EditText objectToSearch = toolbar.findViewById(R.id.etSearch);
                 String objectSearch = objectToSearch.getText().toString();
-                Toast.makeText(getContext(), "Button pressed", Toast.LENGTH_SHORT).show();
                 switch (typeSearch) {
                     case "city":
                         queryRestaurants(objectSearch.toUpperCase());
@@ -202,6 +203,7 @@ public class HomeFragment extends Fragment {
                         toolbar2.getMenu().findItem(R.id.action_search_city).getIcon().setColorFilter(Color.rgb(130, 130, 130), PorterDuff.Mode.SRC_IN);
                         textViewTitleSearch.setText("Search by my location (" + userCurrentCity + ")");
                         typeSearch = "location";
+                        queryRestaurants(userCurrentCity);
                         break;
                     case R.id.action_search_city:
                         toolbar.findViewById(R.id.contentToolbarSearch).setVisibility(View.VISIBLE);
@@ -262,21 +264,36 @@ public class HomeFragment extends Fragment {
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
-                    Location location = task.getResult();
-                    if (location != null) {
-                        try {
-                            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-                            //Initialize address list
-                            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                            Toast.makeText(getContext(), addresses.get(0).getLocality()/*getAddressLine(0)*/, Toast.LENGTH_SHORT).show();
-                            userAddress = addresses.get(0);
-                            userCurrentCity = addresses.get(0).getLocality();
-                            configToolbar2(toolbar2);
-                            queryRestaurants(userCurrentCity.toUpperCase());
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            //Location location = task.getResult();
+                            if (location != null) {
+                                try {
+                                    Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                                    //Initialize address list
+                                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                    Toast.makeText(getContext(), addresses.get(0).getLocality()/*getAddressLine(0)*/, Toast.LENGTH_SHORT).show();
+                                    userAddress = addresses.get(0);
+                                    userCurrentCity = addresses.get(0).getLocality();
+                                    configToolbar2(toolbar2);
+                                    queryRestaurants(userCurrentCity);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            else {
+                                Toast.makeText(getContext(), "Error with location", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
+                    });
+                    task.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull  Exception e) {
+                            Toast.makeText(getContext(), "Fallo: "+ e, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                 }
             });
         }

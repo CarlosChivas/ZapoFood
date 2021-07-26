@@ -55,10 +55,22 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_below="@id/tvReservationDate"
-        android:layout_marginStart="80dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="15dp"
         android:layout_toEndOf="@id/ivReservationImage"
         android:background="@drawable/cancel_reservation"
         app:tint="#FFFEFE"
         app:srcCompat="@drawable/ic_delete" />
+
+    <ImageButton
+        android:id="@+id/btnShowRute"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_navigation"
+        android:layout_below="@id/tvReservationDate"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/navigation_restaurant"
+        app:tint="#FFF9F9"/>
 </RelativeLayout>
