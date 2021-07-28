@@ -20,7 +20,7 @@ import com.parse.ParseUser;
 
 import android.app.ProgressDialog;
 
-import com.parse.boltsinternal.Task;
+
 import com.parse.facebook.ParseFacebookUtils;
 
 import java.util.ArrayList;
@@ -75,12 +75,29 @@ public class LoginActivity extends AppCompatActivity {
                 public void done(ParseUser user, ParseException e) {
                     dialog.dismiss();
                     if(e!=null){
-                        Log.d("Login", "todo mal");
+                        Log.d("Login", "todo mal" + e.toString());
                     }else{
                         if(user == null){
                             Log.d("Login", "Usuario null");
+                        }else{
+                            Log.d("Login", "Todo perfecto!");
+                            Log.d("Login", ParseUser.getCurrentUser().toString());
+                            Collection<String> permissions = Arrays.asList("public_profile", "email");
+                            if (!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
+                                ParseFacebookUtils.linkWithReadPermissionsInBackground(ParseUser.getCurrentUser(), LoginActivity.this, permissions, ex -> {
+                                    if (ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
+                                        Toast.makeText(LoginActivity.this, "Woohoo, user logged in with Facebook.", Toast.LENGTH_LONG).show();
+                                        Log.d("FacebookLoginExample", "Woohoo, user logged in with Facebook!");
+                                    }
+                                });
+                            }
+                            if(ParseUser.getCurrentUser().getString("type").equals("user")){
+                                goMainActivity();
+                            }
+                            else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
+                                goOwnerMainActivity();
+                            }
                         }
-                        Log.d("Login", "Todo perfecto!");
                     }
                 }
             });
