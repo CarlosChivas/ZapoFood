@@ -17,6 +17,14 @@ import com.example.zapofood.fragments.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+import androidx.appcompat.app.AppCompatActivity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import com.facebook.login.LoginManager;
+import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();

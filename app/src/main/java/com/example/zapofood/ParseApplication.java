@@ -7,6 +7,7 @@ import com.example.zapofood.models.Restaurant;
 import com.example.zapofood.models.Review;
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.facebook.ParseFacebookUtils;
 
 public class ParseApplication extends Application {
     @Override
@@ -23,6 +24,8 @@ public class ParseApplication extends Application {
                 .clientKey(getString(R.string.back4app_client_key))
                 .server(getString(R.string.back4app_server_url))
                 .build());
+
+        ParseFacebookUtils.initialize(this);
     }
 }
 

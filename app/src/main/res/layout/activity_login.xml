@@ -66,5 +66,11 @@
         android:layout_marginTop="20dp"
         android:text="Login" />
 
+    <Button
+        android:id="@+id/btnLoginFacebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnLoginSignIn"
+        android:text="Login with Facebook"/>
 
 </RelativeLayout>
