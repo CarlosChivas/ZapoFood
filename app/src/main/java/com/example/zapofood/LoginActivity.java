@@ -2,6 +2,7 @@ package com.example.zapofood;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.zapofood.fragments.HomeFragment;
@@ -33,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etLoginUsername;
     private EditText etLoginPassword;
     private Button btnLoginSignIn;
-    private Button btnLoginFacebook;
+    private CardView btnLoginFacebook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         etLoginUsername = findViewById(R.id.etLoginUsername);
         etLoginPassword = findViewById(R.id.etLoginPassword);
         btnLoginSignIn = findViewById(R.id.btnLoginSignIn);
-        btnLoginFacebook = findViewById(R.id.btnLoginFacebook);
+        btnLoginFacebook = findViewById(R.id.containerFacebookLogin);
 
         btnLoginSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,36 +103,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
             });
-            /*
-            ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, (user, err) -> {
-                dialog.dismiss();
-                if (err != null) {
-                    Log.e("FacebookLoginExample", "done: ", err);
-                    Toast.makeText(this, err.getMessage(), Toast.LENGTH_LONG).show();
-                } else if (user == null) {
-                    Toast.makeText(this, "The user cancelled the Facebook login.", Toast.LENGTH_LONG).show();
-                    Log.d("FacebookLoginExample", "Uh oh. The user cancelled the Facebook login.");
-                } else if (user.isNew()) {
-                    Toast.makeText(this, "User signed up and logged in through Facebook.", Toast.LENGTH_LONG).show();
-                    Log.d("FacebookLoginExample", "User signed up and logged in through Facebook!");
-                    //getUserDetailFromFB();
-                } else {
-                    if (!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
-                        ParseFacebookUtils.linkWithReadPermissionsInBackground(ParseUser.getCurrentUser(), this, permissions, ex -> {
-                            if (ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
-                                Toast.makeText(this, "Woohoo, user logged in with Facebook.", Toast.LENGTH_LONG).show();
-                                Log.d("FacebookLoginExample", "Woohoo, user logged in with Facebook!");
-                            }
-                        });
-                    } else {
-                        Toast.makeText(this, "You have already linked your account with Facebook.", Toast.LENGTH_LONG).show();
-                    }
-                    Toast.makeText(this, "User logged in through Facebook.", Toast.LENGTH_LONG).show();
-                    Log.d("FacebookLoginExample", "User logged in through Facebook!");
-                    //showAlert("Oh, you!", "Welcome back!");
-                }
-            });
-            */
         });
     }
 
