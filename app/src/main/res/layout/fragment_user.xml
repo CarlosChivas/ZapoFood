@@ -31,9 +31,53 @@
             android:text="Carlos Estrada"
             android:layout_below="@id/ivImageProfile"
             android:layout_marginTop="10dp"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textColor="@color/black"
             android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvTitleFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friends"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_below="@id/tvNameProfile"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"/>
+
+        <TextView
+            android:id="@+id/tvAmountFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTitleFriends"
+            android:textSize="16sp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:text="5 friends"/>
+
+        <ImageButton
+            android:id="@+id/btnAddFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"
+            android:backgroundTint="#FF7F23"
+            app:tint="@color/white"
+            android:layout_below="@id/tvNameProfile"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPreviewFriends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvAmountFriends"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            />
 
         <Button
             android:id="@+id/btnUserLogout"
@@ -41,6 +85,7 @@
             android:layout_height="wrap_content"
             android:text="LogOut"
             android:layout_alignParentBottom="true"/>
+
 
     </RelativeLayout>
 

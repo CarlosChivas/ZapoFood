@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_user:
                     default:
-                        fragment = new UserFragment();
+                        fragment = UserFragment.newInstance(ParseUser.getCurrentUser());
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
