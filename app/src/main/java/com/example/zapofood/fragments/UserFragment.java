@@ -129,7 +129,9 @@ public class UserFragment extends Fragment {
         friendsAdapter.setOnItemClickListener(new FriendsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                Log.i("Friends", "Hola mundo");
+                FragmentManager fragmentManager = getParentFragmentManager();
+                ProfileFragment fragment = ProfileFragment.newInstance(friends.get(position));
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragment).commit();
             }
         });
         getFriends();
