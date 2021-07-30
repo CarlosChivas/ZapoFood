@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/ivImageRequest"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvNameRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/ivImageRequest"
+        android:layout_marginStart="20dp"
+        android:text="Carlos Estrada"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/btnAcceptRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/ivImageRequest"
+        android:layout_below="@id/tvNameRequest"
+        android:text="Accept"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:backgroundTint="#84CC64"/>
+    <Button
+        android:id="@+id/btnRejectRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/btnAcceptRequest"
+        android:layout_below="@id/tvNameRequest"
+        android:text="Delete"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#EF5050"/>
+</RelativeLayout>

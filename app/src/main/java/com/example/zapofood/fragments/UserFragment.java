@@ -59,6 +59,7 @@ public class UserFragment extends Fragment {
     private ImageButton btnAddFriends;
     private TextView tvAmountFriends;
     private Button btnSeeAllFriends;
+    private Button btnRequestsFriends;
 
     public static UserFragment newInstance(ParseUser user, List<ParseObject> friends, List<ParseObject> allFriends) {
         UserFragment fragmentDemo = new UserFragment();
@@ -111,6 +112,7 @@ public class UserFragment extends Fragment {
         btnAddFriends = view.findViewById(R.id.btnAddFriends);
         tvAmountFriends = view.findViewById(R.id.tvAmountFriends);
         btnSeeAllFriends = view.findViewById(R.id.btnSeeAllFriends);
+        btnRequestsFriends = view.findViewById(R.id.btnRequestsFriends);
 
         ParseFile image = currentUser.getParseFile("image");
         Glide.with(getContext()).load(image.getUrl()).circleCrop().into(ivImageProfile);
@@ -146,6 +148,15 @@ public class UserFragment extends Fragment {
                 FragmentManager fragmentManager = getParentFragmentManager();
                 FriendsFragment fragmentDemo = FriendsFragment.newInstance(allFriends, true);
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
+            }
+        });
+
+        btnRequestsFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                //FriendsFragment fragmentDemo = FriendsFragment.newInstance(allFriends, true);
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, new RequestsFragment()).commit();
             }
         });
 
