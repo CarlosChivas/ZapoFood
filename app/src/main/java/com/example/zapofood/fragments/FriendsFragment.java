@@ -54,12 +54,13 @@ public class FriendsFragment extends Fragment {
     private List<ParseObject> allUsers;
     private List<ParseObject> users;
     private ImageButton btnBackUser;
+    private Boolean tMyFriends;
 
-
-    public static FriendsFragment newInstance(List<ParseObject> myFriends) {
+    public static FriendsFragment newInstance(List<ParseObject> myFriends, Boolean tMyFriends) {
         FriendsFragment fragment = new FriendsFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList("myFriends", (ArrayList<? extends Parcelable>) myFriends);
+        args.putBoolean("tMyFriends", tMyFriends);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,6 +100,8 @@ public class FriendsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        tMyFriends = getArguments().getBoolean("tMyFriends");
+
         btnBackUser = view.findViewById(R.id.btnBackUser);
         rvFriends = view.findViewById(R.id.rvFriends);
         allUsers = new ArrayList<>();
@@ -111,11 +114,11 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onItemClick(View itemView, int position) {
                 FragmentManager fragmentManager = getParentFragmentManager();
-                ProfileFragment fragment = ProfileFragment.newInstance(allUsers.get(position));
+                ProfileFragment fragment = ProfileFragment.newInstance(allUsers.get(position), getArguments().getParcelableArrayList("myFriends"));
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragment).commit();
             }
         });
-        if(getArguments().getParcelableArrayList("myFriends")!=null){
+        if(tMyFriends){
             allUsers.addAll(getArguments().getParcelableArrayList("myFriends"));
             users = new ArrayList<>();
             users.addAll(allUsers);
@@ -140,7 +143,7 @@ public class FriendsFragment extends Fragment {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        if(users!=null){
+        if(tMyFriends){
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -209,6 +212,5 @@ public class FriendsFragment extends Fragment {
             }
         }
         friendsAdapter.notifyDataSetChanged();
-        Log.d("Friends", "Hola mundo 2");
     }
 }

@@ -54,6 +54,68 @@
             android:textSize="22sp"
             android:textColor="@color/black"
             android:textStyle="bold"/>
+
+        <RelativeLayout
+            android:id="@+id/containerAddFriend"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/tvNameProfile"
+            android:layout_marginStart="110dp"
+            android:layout_marginEnd="110dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/review_background"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivIconAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_person"
+                android:layout_centerVertical="true"
+                app:tint="@color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add"
+                android:layout_toEndOf="@id/ivIconAdd"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/containerDeleteFriend"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/tvNameProfile"
+            android:layout_marginStart="110dp"
+            android:layout_marginEnd="110dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/cancel_reservation"
+            android:gravity="center"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/ivIconDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_remove_person"
+                android:layout_centerVertical="true"
+                app:tint="@color/white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:layout_toEndOf="@id/ivIconDelete"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp"/>
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </FrameLayout>

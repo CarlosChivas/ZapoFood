@@ -120,7 +120,7 @@ public class UserFragment extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getParentFragmentManager();
                 //RestaurantDetailsFragment fragmentDemo = RestaurantDetailsFragment.newInstance(allRestaurants.get(position), userAddress);
-                FriendsFragment fragmentDemo = FriendsFragment.newInstance(null);
+                FriendsFragment fragmentDemo = FriendsFragment.newInstance(allFriends, false);
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });
@@ -136,7 +136,7 @@ public class UserFragment extends Fragment {
             @Override
             public void onItemClick(View itemView, int position) {
                 FragmentManager fragmentManager = getParentFragmentManager();
-                ProfileFragment fragment = ProfileFragment.newInstance(friends.get(position));
+                ProfileFragment fragment = ProfileFragment.newInstance(friends.get(position), allFriends);
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragment).commit();
             }
         });
@@ -144,7 +144,7 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getParentFragmentManager();
-                FriendsFragment fragmentDemo = FriendsFragment.newInstance(allFriends);
+                FriendsFragment fragmentDemo = FriendsFragment.newInstance(allFriends, true);
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });

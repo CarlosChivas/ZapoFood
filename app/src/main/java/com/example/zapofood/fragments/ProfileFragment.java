@@ -7,11 +7,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,6 +22,9 @@ import com.example.zapofood.R;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -35,11 +41,15 @@ public class ProfileFragment extends Fragment {
     private ImageView ivImageProfile;
     private TextView tvNameProfile;
     private ParseUser userSelected;
+    private List<ParseObject> myFriends;
+    private RelativeLayout containerStatusFriend;
 
-    public static ProfileFragment newInstance(ParseObject parseObject) {
+
+    public static ProfileFragment newInstance(ParseObject parseObject, List<ParseObject> myFriends) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
         args.putParcelable("user", parseObject);
+        args.putParcelableArrayList("myFriends", (ArrayList<? extends Parcelable>) myFriends);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,6 +86,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        myFriends = getArguments().getParcelableArrayList("myFriends");
         btnBackProfile = view.findViewById(R.id.btnBackProfile);
         userSelected = getArguments().getParcelable("user");
         ivImageProfile = view.findViewById(R.id.ivImageProfile);
@@ -88,8 +99,26 @@ public class ProfileFragment extends Fragment {
                 fragmentManager.popBackStack();
             }
         });
+
         ParseFile image = userSelected.getParseFile("image");
         Glide.with(getContext()).load(image.getUrl()).circleCrop().into(ivImageProfile);
         tvNameProfile.setText(userSelected.getUsername());
+
+        if(checkFriend()){
+            containerStatusFriend = view.findViewById(R.id.containerDeleteFriend);
+            containerStatusFriend.setVisibility(View.VISIBLE);
+        }else{
+            containerStatusFriend = view.findViewById(R.id.containerAddFriend);
+            containerStatusFriend.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean checkFriend(){
+        for(ParseObject parseObject : myFriends){
+            if(parseObject.getObjectId().equals(userSelected.getObjectId())){
+                return true;
+            }
+        }
+        return false;
     }
 }
