@@ -96,14 +96,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
         public void bind(ParseObject user) {
             // Bind the post data to the view elements
-            try {
-                user.fetchIfNeeded();
-                tvNameFriend.setText(user.getString("username"));
-                ParseFile image = user.getParseFile("image");
-                Glide.with(context).load(image.getUrl()).into(ivImageFriend);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            tvNameFriend.setText(user.getString("username"));
+            ParseFile image = user.getParseFile("image");
+            Glide.with(context).load(image.getUrl()).into(ivImageFriend);
+
         }
     }
 }

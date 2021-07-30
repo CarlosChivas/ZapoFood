@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,6 +54,10 @@ public class UserFragment extends Fragment {
     private RecyclerView rvPreviewFriends;
     private FriendsAdapter friendsAdapter;
     private List<ParseObject> friends;
+    private List<ParseObject> allFriends;
+    private ImageButton btnAddFriends;
+    private TextView tvAmountFriends;
+    private Button btnSeeAllFriends;
 
     public static UserFragment newInstance(ParseUser user) {
         UserFragment fragmentDemo = new UserFragment();
@@ -99,10 +105,22 @@ public class UserFragment extends Fragment {
         tvNameProfile = view.findViewById(R.id.tvNameProfile);
         rvPreviewFriends = view.findViewById(R.id.rvPreviewFriends);
         btnUserLogout = view.findViewById(R.id.btnUserLogout);
+        btnAddFriends = view.findViewById(R.id.btnAddFriends);
+        tvAmountFriends = view.findViewById(R.id.tvAmountFriends);
+        btnSeeAllFriends = view.findViewById(R.id.btnSeeAllFriends);
 
         ParseFile image = currentUser.getParseFile("image");
         Glide.with(getContext()).load(image.getUrl()).circleCrop().into(ivImageProfile);
         tvNameProfile.setText(currentUser.getUsername());
+        btnAddFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                //RestaurantDetailsFragment fragmentDemo = RestaurantDetailsFragment.newInstance(allRestaurants.get(position), userAddress);
+                FriendsFragment fragmentDemo = FriendsFragment.newInstance(null);
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
+            }
+        });
         friends = new ArrayList<>();
         friendsAdapter = new FriendsAdapter(getContext(), friends);
         rvPreviewFriends.setHasFixedSize(true);
@@ -114,8 +132,15 @@ public class UserFragment extends Fragment {
                 Log.i("Friends", "Hola mundo");
             }
         });
-
         getFriends();
+        btnSeeAllFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FriendsFragment fragmentDemo = FriendsFragment.newInstance(allFriends);
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
+            }
+        });
 
         btnUserLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,27 +161,19 @@ public class UserFragment extends Fragment {
         getActivity().finish();
     }
     private void getFriends(){
-        //ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-        /*JSONArray jsonArray = ParseUser.getCurrentUser().getJSONArray("friends");
-        List<ParseUser> userFriends = new ArrayList<>();
-        for(int i = 0; i<jsonArray.length(); i++){
+        allFriends = ParseUser.getCurrentUser().getList("friends");
+        for (ParseObject parseObject : allFriends){
             try {
-                jsonArray.get
-                friends.add((ParseUser) jsonArray.get(i));
-            } catch (JSONException e) {
+                parseObject.fetch();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }*/
-        List<ParseObject> userFriends = ParseUser.getCurrentUser().getList("friends");
-        friends.addAll(userFriends);
-        friendsAdapter.notifyDataSetChanged();
+        }
+        for(int i =0; i<3; i++){
+            friends.add(allFriends.get(i));
+        }
 
-        /*try {
-            Log.d("Friends", parseObject.fetchIfNeeded().getString("username"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
-        /*friends.addAll(ParseUser.getCurrentUser().getList("friends"));
-        friendsAdapter.notifyDataSetChanged();*/
+        friendsAdapter.notifyDataSetChanged();
+        tvAmountFriends.setText(allFriends.size() + " friends");
     }
 }

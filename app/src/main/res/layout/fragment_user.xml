@@ -55,7 +55,7 @@
             android:textSize="16sp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:text="5 friends"/>
+            android:text="- friends"/>
 
         <ImageButton
             android:id="@+id/btnAddFriends"
@@ -80,11 +80,24 @@
             />
 
         <Button
+            android:id="@+id/btnSeeAllFriends"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="See all friends"
+            android:layout_below="@+id/rvPreviewFriends"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="#CAC9C9"
+            android:textColor="@color/black"/>
+
+
+        <Button
             android:id="@+id/btnUserLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LogOut"
             android:layout_alignParentBottom="true"/>
+
 
 
     </RelativeLayout>
