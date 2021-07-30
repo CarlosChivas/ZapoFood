@@ -14,13 +14,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:menu="@menu/menu_friends"
-            app:title="Friends"/>
+            app:contentInsetStart="0dp"
+            app:title=" "
+            >
+
+            <ImageButton
+                android:id="@+id/btnBackUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_close"
+                android:backgroundTint="@color/white"
+                app:tint="@color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Friends"
+                android:layout_marginStart="40dp"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFriends"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/tbSearchFriends"/>
+
 
     </RelativeLayout>
 </FrameLayout>

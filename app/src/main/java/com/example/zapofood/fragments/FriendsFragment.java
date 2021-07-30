@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.example.zapofood.MainActivity;
@@ -30,6 +31,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,6 +52,7 @@ public class FriendsFragment extends Fragment {
     private RecyclerView rvFriends;
     private FriendsAdapter friendsAdapter;
     private List<ParseObject> allUsers;
+    private ImageButton btnBackUser;
 
 
     public static FriendsFragment newInstance(List<ParseObject> myFriends) {
@@ -98,6 +101,7 @@ public class FriendsFragment extends Fragment {
         ((MainActivity)getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
+        btnBackUser = view.findViewById(R.id.btnBackUser);
         rvFriends = view.findViewById(R.id.rvFriends);
         allUsers = new ArrayList<>();
         friendsAdapter = new FriendsAdapter(getContext(), allUsers);
@@ -114,9 +118,14 @@ public class FriendsFragment extends Fragment {
             allUsers.addAll(getArguments().getParcelableArrayList("myFriends"));
             friendsAdapter.notifyDataSetChanged();
         }
-
+        btnBackUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.popBackStack();
+            }
+        });
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
