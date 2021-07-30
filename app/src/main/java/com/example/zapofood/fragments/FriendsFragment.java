@@ -52,6 +52,7 @@ public class FriendsFragment extends Fragment {
     private RecyclerView rvFriends;
     private FriendsAdapter friendsAdapter;
     private List<ParseObject> allUsers;
+    private List<ParseObject> users;
     private ImageButton btnBackUser;
 
 
@@ -97,9 +98,6 @@ public class FriendsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.tbSearchFriends);
-        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
-        setHasOptionsMenu(true);
 
         btnBackUser = view.findViewById(R.id.btnBackUser);
         rvFriends = view.findViewById(R.id.rvFriends);
@@ -119,6 +117,8 @@ public class FriendsFragment extends Fragment {
         });
         if(getArguments().getParcelableArrayList("myFriends")!=null){
             allUsers.addAll(getArguments().getParcelableArrayList("myFriends"));
+            users = new ArrayList<>();
+            users.addAll(allUsers);
             friendsAdapter.notifyDataSetChanged();
         }
         btnBackUser.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +128,9 @@ public class FriendsFragment extends Fragment {
                 fragmentManager.popBackStack();
             }
         });
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.tbSearchFriends);
+        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -137,20 +140,38 @@ public class FriendsFragment extends Fragment {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                fetchUsers(query);
-                searchView.clearFocus();
-                return true;
-            }
+        if(users!=null){
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    fetchFriends(query);
+                    searchView.clearFocus();
+                    return true;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                fetchUsers(newText);
-                return false;
-            }
-        });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    fetchFriends(newText);
+                    return false;
+                }
+            });
+        }
+        else{
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    fetchUsers(query);
+                    searchView.clearFocus();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    fetchUsers(newText);
+                    return false;
+                }
+            });
+        }
     }
 
     private void fetchUsers(String querySearch){
@@ -178,5 +199,16 @@ public class FriendsFragment extends Fragment {
                 friendsAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void fetchFriends(String searchQuery){
+        allUsers.clear();
+        for (ParseObject parseObject : users){
+            if(parseObject.getString("username").contains(searchQuery)){
+                allUsers.add(parseObject);
+            }
+        }
+        friendsAdapter.notifyDataSetChanged();
+        Log.d("Friends", "Hola mundo 2");
     }
 }

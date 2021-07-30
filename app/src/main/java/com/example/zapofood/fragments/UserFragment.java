@@ -126,11 +126,12 @@ public class UserFragment extends Fragment {
         });
         friends = getArguments().getParcelableArrayList("friends");
         allFriends = getArguments().getParcelableArrayList("allFriends");
-        //friendsAdapter.notifyDataSetChanged();
+        tvAmountFriends.setText(allFriends.size() + " friends");
         friendsAdapter = new FriendsAdapter(getContext(), friends);
         rvPreviewFriends.setHasFixedSize(true);
         rvPreviewFriends.setAdapter(friendsAdapter);
         rvPreviewFriends.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
         friendsAdapter.setOnItemClickListener(new FriendsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
@@ -139,8 +140,6 @@ public class UserFragment extends Fragment {
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragment).commit();
             }
         });
-        //friendsAdapter.notifyDataSetChanged();
-        //getFriends();
         btnSeeAllFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,20 +166,5 @@ public class UserFragment extends Fragment {
         Intent i = new Intent(getContext(), LoginActivity.class);
         startActivity(i);
         getActivity().finish();
-    }
-    private void getFriends(){
-        allFriends = ParseUser.getCurrentUser().getList("friends");
-        for (ParseObject parseObject : allFriends){
-            try {
-                parseObject.fetch();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        for(int i =0; i<3; i++){
-            friends.add(allFriends.get(i));
-        }
-        friendsAdapter.notifyDataSetChanged();
-        tvAmountFriends.setText(allFriends.size() + " friends");
     }
 }
