@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,10 +60,12 @@ public class UserFragment extends Fragment {
     private TextView tvAmountFriends;
     private Button btnSeeAllFriends;
 
-    public static UserFragment newInstance(ParseUser user) {
+    public static UserFragment newInstance(ParseUser user, List<ParseObject> friends, List<ParseObject> allFriends) {
         UserFragment fragmentDemo = new UserFragment();
         Bundle args = new Bundle();
         args.putParcelable("user", user);
+        args.putParcelableArrayList("friends", (ArrayList<? extends Parcelable>) friends);
+        args.putParcelableArrayList("allFriends", (ArrayList<? extends Parcelable>) allFriends);
         fragmentDemo.setArguments(args);
         return fragmentDemo;
     }
@@ -121,7 +124,9 @@ public class UserFragment extends Fragment {
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });
-        friends = new ArrayList<>();
+        friends = getArguments().getParcelableArrayList("friends");
+        allFriends = getArguments().getParcelableArrayList("allFriends");
+        //friendsAdapter.notifyDataSetChanged();
         friendsAdapter = new FriendsAdapter(getContext(), friends);
         rvPreviewFriends.setHasFixedSize(true);
         rvPreviewFriends.setAdapter(friendsAdapter);
@@ -134,7 +139,8 @@ public class UserFragment extends Fragment {
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragment).commit();
             }
         });
-        getFriends();
+        //friendsAdapter.notifyDataSetChanged();
+        //getFriends();
         btnSeeAllFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

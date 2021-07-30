@@ -24,16 +24,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import com.facebook.login.LoginManager;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     private BottomNavigationView bottomNavigationView;
+    private List<ParseObject> friends;
+    private List<ParseObject> allFriends;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        friends = new ArrayList<>();
+        allFriends = new ArrayList<>();
+        configUser();
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -49,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_user:
                     default:
-                        fragment = UserFragment.newInstance(ParseUser.getCurrentUser());
+                        fragment = UserFragment.newInstance(ParseUser.getCurrentUser(), friends, allFriends);
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
@@ -58,5 +68,19 @@ public class MainActivity extends AppCompatActivity {
         });
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
+    }
+
+    private void configUser(){
+        allFriends = ParseUser.getCurrentUser().getList("friends");
+        for (ParseObject parseObject : allFriends){
+            try {
+                parseObject.fetch();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        for(int i =0; i<3; i++){
+            friends.add(allFriends.get(i));
+        }
     }
 }
