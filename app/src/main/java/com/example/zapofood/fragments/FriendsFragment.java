@@ -36,11 +36,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FriendsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FriendsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -69,15 +64,6 @@ public class FriendsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FriendsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FriendsFragment newInstance(String param1, String param2) {
         FriendsFragment fragment = new FriendsFragment();
         Bundle args = new Bundle();
@@ -156,9 +142,10 @@ public class FriendsFragment extends Fragment {
     }
 
     private void fetchUsers(String querySearch){
+        if(querySearch.isEmpty()){
+            return;
+        }
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-        //query.whereEqualTo(Restaurant.KEY_NAME, name);
-        //query.whereContains("name", name);
         query.whereMatches("username", "("+querySearch+")", "i");
         query.setLimit(15);
         query.findInBackground(new FindCallback<ParseUser>() {
@@ -177,13 +164,7 @@ public class FriendsFragment extends Fragment {
                     }
                 }
                 friendsAdapter.notifyDataSetChanged();
-                /*
-
-                 */
             }
         });
     }
-
-
-
 }
