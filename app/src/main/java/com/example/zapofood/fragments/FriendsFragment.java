@@ -108,10 +108,13 @@ public class FriendsFragment extends Fragment {
         rvFriends.setHasFixedSize(true);
         rvFriends.setAdapter(friendsAdapter);
         rvFriends.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
         friendsAdapter.setOnItemClickListener(new FriendsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                Log.i("Friends", "Hola mundo");
+                FragmentManager fragmentManager = getParentFragmentManager();
+                ProfileFragment fragment = ProfileFragment.newInstance(allUsers.get(position));
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragment).commit();
             }
         });
         if(getArguments().getParcelableArrayList("myFriends")!=null){

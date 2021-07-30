@@ -172,7 +172,6 @@ public class UserFragment extends Fragment {
         for(int i =0; i<3; i++){
             friends.add(allFriends.get(i));
         }
-
         friendsAdapter.notifyDataSetChanged();
         tvAmountFriends.setText(allFriends.size() + " friends");
     }
