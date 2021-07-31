@@ -114,15 +114,23 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onItemClick(View itemView, int position) {
                 FragmentManager fragmentManager = getParentFragmentManager();
-                ProfileFragment fragment = ProfileFragment.newInstance(allUsers.get(position), getArguments().getParcelableArrayList("myFriends"));
+                ProfileFragment fragment = ProfileFragment.newInstance(allUsers.get(position), getArguments().getParcelableArrayList("myFriends"), position);
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragment).commit();
             }
         });
         if(tMyFriends){
-            allUsers.addAll(getArguments().getParcelableArrayList("myFriends"));
-            users = new ArrayList<>();
-            users.addAll(allUsers);
-            friendsAdapter.notifyDataSetChanged();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    getFriends();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            friendsAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }).start();
         }
         btnBackUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,5 +220,18 @@ public class FriendsFragment extends Fragment {
             }
         }
         friendsAdapter.notifyDataSetChanged();
+    }
+
+    public void getFriends(){
+        List<ParseObject> fullFriends = getArguments().getParcelableArrayList("myFriends");
+        for(ParseObject parseObject : fullFriends){
+            try {
+                allUsers.add(parseObject.fetch());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        users = new ArrayList<>();
+        users.addAll(allUsers);
     }
 }

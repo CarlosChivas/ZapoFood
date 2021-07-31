@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private List<ParseObject> friends;
     private List<ParseObject> allFriends;
+    private List<ParseObject> requests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         friends = new ArrayList<>();
         allFriends = new ArrayList<>();
-        configUser();
+        requests = new ArrayList<>();
+        //configUser();
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_user:
                     default:
-                        fragment = UserFragment.newInstance(ParseUser.getCurrentUser(), friends, allFriends);
+                        fragment = UserFragment.newInstance(ParseUser.getCurrentUser(), friends, allFriends, requests);
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
@@ -81,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
         }
         for(int i =0; i<3; i++){
             friends.add(allFriends.get(i));
+        }
+
+        requests = ParseUser.getCurrentUser().getList("requests");
+        for(ParseObject parseObject : requests){
+            try {
+                parseObject.fetch();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

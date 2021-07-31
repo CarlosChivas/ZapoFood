@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.zapofood.LoginActivity;
+import com.example.zapofood.MainActivity;
 import com.example.zapofood.R;
 import com.example.zapofood.adapters.FriendsAdapter;
 import com.example.zapofood.models.Restaurant;
@@ -61,12 +62,13 @@ public class UserFragment extends Fragment {
     private Button btnSeeAllFriends;
     private Button btnRequestsFriends;
 
-    public static UserFragment newInstance(ParseUser user, List<ParseObject> friends, List<ParseObject> allFriends) {
+    public static UserFragment newInstance(ParseUser user, List<ParseObject> friends, List<ParseObject> allFriends, List<ParseObject> requests) {
         UserFragment fragmentDemo = new UserFragment();
         Bundle args = new Bundle();
         args.putParcelable("user", user);
         args.putParcelableArrayList("friends", (ArrayList<? extends Parcelable>) friends);
         args.putParcelableArrayList("allFriends", (ArrayList<? extends Parcelable>) allFriends);
+        args.putParcelableArrayList("requests", (ArrayList<? extends Parcelable>) requests);
         fragmentDemo.setArguments(args);
         return fragmentDemo;
     }
@@ -126,8 +128,10 @@ public class UserFragment extends Fragment {
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });
-        friends = getArguments().getParcelableArrayList("friends");
-        allFriends = getArguments().getParcelableArrayList("allFriends");
+        //friends = getArguments().getParcelableArrayList("friends");
+        //allFriends = getArguments().getParcelableArrayList("allFriends");
+        friends = new ArrayList<>();
+        allFriends = new ArrayList<>();
         tvAmountFriends.setText(allFriends.size() + " friends");
         friendsAdapter = new FriendsAdapter(getContext(), friends);
         rvPreviewFriends.setHasFixedSize(true);
@@ -138,7 +142,7 @@ public class UserFragment extends Fragment {
             @Override
             public void onItemClick(View itemView, int position) {
                 FragmentManager fragmentManager = getParentFragmentManager();
-                ProfileFragment fragment = ProfileFragment.newInstance(friends.get(position), allFriends);
+                ProfileFragment fragment = ProfileFragment.newInstance(friends.get(position), allFriends, position);
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragment).commit();
             }
         });
@@ -155,8 +159,8 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getParentFragmentManager();
-                //FriendsFragment fragmentDemo = FriendsFragment.newInstance(allFriends, true);
-                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, new RequestsFragment()).commit();
+                RequestsFragment fragmentDemo = RequestsFragment.newInstance(currentUser.getList("requests"));
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });
 
@@ -166,6 +170,19 @@ public class UserFragment extends Fragment {
                 logout();
             }
         });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getFriends();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        friendsAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
 
     private void logout(){
@@ -177,5 +194,19 @@ public class UserFragment extends Fragment {
         Intent i = new Intent(getContext(), LoginActivity.class);
         startActivity(i);
         getActivity().finish();
+    }
+
+    private void getFriends(){
+        allFriends = ParseUser.getCurrentUser().getList("friends");
+        for(int i =0; i<allFriends.size(); i++){
+            if(i>=3){
+                break;
+            }
+            try {
+                friends.add(allFriends.get(i).fetch());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

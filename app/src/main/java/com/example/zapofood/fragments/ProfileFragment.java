@@ -12,15 +12,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.zapofood.R;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -45,11 +48,12 @@ public class ProfileFragment extends Fragment {
     private RelativeLayout containerStatusFriend;
 
 
-    public static ProfileFragment newInstance(ParseObject parseObject, List<ParseObject> myFriends) {
+    public static ProfileFragment newInstance(ParseObject parseObject, List<ParseObject> myFriends, int position) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
         args.putParcelable("user", parseObject);
         args.putParcelableArrayList("myFriends", (ArrayList<? extends Parcelable>) myFriends);
+        args.putInt("position", position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,6 +111,13 @@ public class ProfileFragment extends Fragment {
         if(checkFriend()){
             containerStatusFriend = view.findViewById(R.id.containerDeleteFriend);
             containerStatusFriend.setVisibility(View.VISIBLE);
+            containerStatusFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myFriends.remove(getArguments().getInt("position"));
+                    deleteFriend(myFriends);
+                }
+            });
         }else{
             containerStatusFriend = view.findViewById(R.id.containerAddFriend);
             containerStatusFriend.setVisibility(View.VISIBLE);
@@ -120,5 +131,11 @@ public class ProfileFragment extends Fragment {
             }
         }
         return false;
+    }
+
+    private void deleteFriend(List<ParseObject> myFriends){
+        ParseUser newUser = ParseUser.getCurrentUser();
+        newUser.put("friends", myFriends);
+        newUser.saveInBackground();
     }
 }

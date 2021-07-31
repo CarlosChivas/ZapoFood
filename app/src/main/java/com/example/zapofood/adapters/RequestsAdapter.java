@@ -18,6 +18,7 @@ import com.example.zapofood.models.Restaurant;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -103,6 +104,16 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             tvNameRequest.setText(request.getString("username"));
             ParseFile image = request.getParseFile("image");
             Glide.with(context).load(image.getUrl()).into(ivImageRequest);
+            btnRejectRequest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<ParseObject> requestsUpdate = ParseUser.getCurrentUser().getList("requests");
+                    requestsUpdate.remove(getAdapterPosition());
+                    ParseUser newUser = ParseUser.getCurrentUser();
+                    newUser.put("requests", requestsUpdate);
+                    newUser.saveInBackground();
+                }
+            });
         }
     }
 }

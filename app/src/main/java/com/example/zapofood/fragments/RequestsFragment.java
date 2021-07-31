@@ -6,7 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +17,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.example.zapofood.R;
+import com.example.zapofood.adapters.RequestsAdapter;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RequestsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class RequestsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -32,7 +37,17 @@ public class RequestsFragment extends Fragment {
     private String mParam2;
 
     private ImageButton btnBackUser;
+    private RecyclerView rvRequests;
+    private RequestsAdapter requestsAdapter;
+    private List<ParseObject> requests;
 
+    public static RequestsFragment newInstance(List<ParseObject> requests) {
+        RequestsFragment fragment = new RequestsFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList("requests", (ArrayList<? extends Parcelable>) requests);
+        fragment.setArguments(args);
+        return fragment;
+    }
     public RequestsFragment() {
         // Required empty public constructor
     }
@@ -66,6 +81,11 @@ public class RequestsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         btnBackUser = view.findViewById(R.id.btnBackUser);
+        rvRequests = view.findViewById(R.id.rvRequests);
+        requests = new ArrayList<>();
+        requestsAdapter = new RequestsAdapter(getContext(), requests);
+        rvRequests.setAdapter(requestsAdapter);
+        rvRequests.setLayoutManager(new LinearLayoutManager(getContext()));
         btnBackUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,5 +93,27 @@ public class RequestsFragment extends Fragment {
                 fragmentManager.popBackStack();
             }
         });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getRequests();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestsAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
+    }
+    public void getRequests(){
+        List<ParseObject> requestsF =  getArguments().getParcelableArrayList("requests");
+        for(ParseObject parseObject : requestsF){
+            try {
+                requests.add(parseObject.fetch());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
