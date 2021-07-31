@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,11 +17,13 @@ import com.bumptech.glide.Glide;
 
 import com.example.zapofood.R;
 import com.example.zapofood.models.Restaurant;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -112,6 +116,30 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
                     ParseUser newUser = ParseUser.getCurrentUser();
                     newUser.put("requests", requestsUpdate);
                     newUser.saveInBackground();
+                }
+            });
+            btnAcceptRequest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<ParseObject> friendsUpdate = ParseUser.getCurrentUser().getList("friends");
+                    friendsUpdate.add(request);
+                    ParseUser newUser = ParseUser.getCurrentUser();
+                    List<ParseObject> requestsUpdate = ParseUser.getCurrentUser().getList("requests");
+                    requestsUpdate.remove(getAdapterPosition());
+
+                    newUser.put("requests", requestsUpdate);
+                    newUser.put("friends", friendsUpdate);
+                    newUser.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e != null){
+                                Toast.makeText(context.getApplicationContext(), "Error saving new friend: " + e, Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(context.getApplicationContext(), "New friend added", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             });
         }
