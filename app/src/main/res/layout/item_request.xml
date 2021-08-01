@@ -23,6 +23,19 @@
         android:textStyle="bold"
         android:textColor="@color/black"/>
 
+    <TextView
+        android:id="@+id/tvRequestChanged"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status changed"
+        android:layout_toEndOf="@id/ivImageRequest"
+        android:layout_below="@id/tvNameRequest"
+        android:layout_alignParentEnd="true"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/btnAcceptRequest"
         android:layout_width="wrap_content"
@@ -32,7 +45,7 @@
         android:text="Accept"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        android:backgroundTint="#84CC64"/>
+        android:backgroundTint="#84CC64" />
     <Button
         android:id="@+id/btnRejectRequest"
         android:layout_width="wrap_content"
@@ -42,5 +55,5 @@
         android:text="Delete"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:backgroundTint="#EF5050"/>
+        android:backgroundTint="#EF5050" />
 </RelativeLayout>

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,14 +41,8 @@ public class RequestsFragment extends Fragment {
     private RecyclerView rvRequests;
     private RequestsAdapter requestsAdapter;
     private List<ParseObject> requests;
+    private List<ParseObject> reU;
 
-    public static RequestsFragment newInstance(List<ParseObject> requests) {
-        RequestsFragment fragment = new RequestsFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList("requests", (ArrayList<? extends Parcelable>) requests);
-        fragment.setArguments(args);
-        return fragment;
-    }
     public RequestsFragment() {
         // Required empty public constructor
     }
@@ -83,6 +78,7 @@ public class RequestsFragment extends Fragment {
         btnBackUser = view.findViewById(R.id.btnBackUser);
         rvRequests = view.findViewById(R.id.rvRequests);
         requests = new ArrayList<>();
+        reU = new ArrayList<>();
         requestsAdapter = new RequestsAdapter(getContext(), requests);
         rvRequests.setAdapter(requestsAdapter);
         rvRequests.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -107,8 +103,16 @@ public class RequestsFragment extends Fragment {
         }).start();
     }
     public void getRequests(){
-        List<ParseObject> requestsF =  getArguments().getParcelableArrayList("requests");
-        for(ParseObject parseObject : requestsF){
+        try {
+            ParseUser.getCurrentUser().fetch();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Log.i("Friends", "entro al metodo request");
+        reU = ParseUser.getCurrentUser().getList("requests");
+        Log.i("Friends", "Size de request: " + reU.size());
+
+        for(ParseObject parseObject : reU){
             try {
                 requests.add(parseObject.fetch());
             } catch (ParseException e) {

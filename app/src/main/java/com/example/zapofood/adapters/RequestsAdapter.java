@@ -83,7 +83,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
         private ImageView ivImageRequest;
         private Button btnRejectRequest;
         private Button btnAcceptRequest;
-
+        private TextView tvRequestChanged;
 
         final View rootView;
 
@@ -94,6 +94,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             ivImageRequest = itemView.findViewById(R.id.ivImageRequest);
             btnAcceptRequest = itemView.findViewById(R.id.btnAcceptRequest);
             btnRejectRequest = itemView.findViewById(R.id.btnRejectRequest);
+            tvRequestChanged = itemView.findViewById(R.id.tvRequestChanged);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -116,6 +117,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
                     ParseUser newUser = ParseUser.getCurrentUser();
                     newUser.put("requests", requestsUpdate);
                     newUser.saveInBackground();
+                    updateRequestUI("Request rejected");
                 }
             });
             btnAcceptRequest.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +128,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
                     ParseUser newUser = ParseUser.getCurrentUser();
                     List<ParseObject> requestsUpdate = ParseUser.getCurrentUser().getList("requests");
                     requestsUpdate.remove(getAdapterPosition());
-
                     newUser.put("requests", requestsUpdate);
                     newUser.put("friends", friendsUpdate);
                     newUser.saveInBackground(new SaveCallback() {
@@ -137,11 +138,19 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
                             }
                             else{
                                 Toast.makeText(context.getApplicationContext(), "New friend added", Toast.LENGTH_SHORT).show();
+                                updateRequestUI("Now " + request.getString("username") + " and you are friends");
                             }
                         }
                     });
                 }
             });
+        }
+
+        public void updateRequestUI(String text){
+            btnRejectRequest.setVisibility(View.GONE);
+            btnAcceptRequest.setVisibility(View.GONE);
+            tvRequestChanged.setVisibility(View.VISIBLE);
+            tvRequestChanged.setText(text);
         }
     }
 }

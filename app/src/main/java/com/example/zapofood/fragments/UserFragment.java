@@ -62,13 +62,13 @@ public class UserFragment extends Fragment {
     private Button btnSeeAllFriends;
     private Button btnRequestsFriends;
 
-    public static UserFragment newInstance(ParseUser user, List<ParseObject> friends, List<ParseObject> allFriends, List<ParseObject> requests) {
+    public static UserFragment newInstance(ParseUser user, List<ParseObject> friends, List<ParseObject> allFriends) {
         UserFragment fragmentDemo = new UserFragment();
         Bundle args = new Bundle();
         args.putParcelable("user", user);
         args.putParcelableArrayList("friends", (ArrayList<? extends Parcelable>) friends);
         args.putParcelableArrayList("allFriends", (ArrayList<? extends Parcelable>) allFriends);
-        args.putParcelableArrayList("requests", (ArrayList<? extends Parcelable>) requests);
+
         fragmentDemo.setArguments(args);
         return fragmentDemo;
     }
@@ -159,8 +159,8 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getParentFragmentManager();
-                RequestsFragment fragmentDemo = RequestsFragment.newInstance(currentUser.getList("requests"));
-                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
+                //RequestsFragment fragmentDemo = RequestsFragment.newInstance(currentUser.getList("requests"));
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, new RequestsFragment()).commit();
             }
         });
 
