@@ -1,6 +1,7 @@
 package com.example.zapofood.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,9 @@ import com.bumptech.glide.Glide;
 
 import com.example.zapofood.R;
 import com.example.zapofood.models.Restaurant;
+import com.parse.FunctionCallback;
 import com.parse.Parse;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -25,6 +28,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHolder> {
@@ -123,10 +127,26 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             btnAcceptRequest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    List<ParseObject> requestsUpdate = ParseUser.getCurrentUser().getList("requests");
+                    HashMap<String, Object> params = new HashMap<String, Object>();
+                    try {
+                        params.put("objectId", requestsUpdate.get(getAdapterPosition()).fetch().getObjectId());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    params.put("newObjectId", ParseUser.getCurrentUser().getObjectId());
+                    ParseCloud.callFunctionInBackground("addFriend", params, new FunctionCallback<String>() {
+                        @Override
+                        public void done(String object, ParseException e) {
+                            if(e != null){
+                                Log.i("Friends", e.toString());
+                            }
+                        }
+                    });
+
                     List<ParseObject> friendsUpdate = ParseUser.getCurrentUser().getList("friends");
                     friendsUpdate.add(request);
                     ParseUser newUser = ParseUser.getCurrentUser();
-                    List<ParseObject> requestsUpdate = ParseUser.getCurrentUser().getList("requests");
                     requestsUpdate.remove(getAdapterPosition());
                     newUser.put("requests", requestsUpdate);
                     newUser.put("friends", friendsUpdate);

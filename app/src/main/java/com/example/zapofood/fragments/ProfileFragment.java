@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.zapofood.R;
 import com.parse.FunctionCallback;
+import com.parse.Parse;
 import com.parse.ParseClassName;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
@@ -54,11 +55,12 @@ public class ProfileFragment extends Fragment {
     private RelativeLayout containerStatusFriend;
 
 
-    public static ProfileFragment newInstance(ParseObject parseObject, List<ParseObject> myFriends, int position) {
+    public static ProfileFragment newInstance(ParseObject parseObject, List<ParseObject> myFriends, List<ParseObject> myRequestsSent, int position) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
         args.putParcelable("user", parseObject);
         args.putParcelableArrayList("myFriends", (ArrayList<? extends Parcelable>) myFriends);
+        args.putParcelableArrayList("myRequestsSent", (ArrayList<? extends Parcelable>) myRequestsSent);
         args.putInt("position", position);
         fragment.setArguments(args);
         return fragment;
@@ -116,13 +118,25 @@ public class ProfileFragment extends Fragment {
 
         if(checkFriend()){
             containerDeleteFriend(view);
-        }else{
+        }else if(checkRequestSent()){
+            containerRequestSent(view);
+        }
+        else{
             containerAddFriend(view);
         }
     }
 
     private boolean checkFriend(){
         for(ParseObject parseObject : myFriends){
+            if(parseObject.getObjectId().equals(userSelected.getObjectId())){
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean checkRequestSent(){
+        List<ParseObject> myRequestsSent = getArguments().getParcelableArrayList("myRequestsSent");
+        for(ParseObject parseObject : myRequestsSent){
             if(parseObject.getObjectId().equals(userSelected.getObjectId())){
                 return true;
             }
@@ -138,11 +152,26 @@ public class ProfileFragment extends Fragment {
     public void containerDeleteFriend(View view){
         containerStatusFriend = view.findViewById(R.id.containerDeleteFriend);
         containerStatusFriend.setVisibility(View.VISIBLE);
+
         containerStatusFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                HashMap<String, Object> params = new HashMap<String, Object>();
+                params.put("objectId", userSelected.getObjectId());
+                params.put("deleteFriendId", ParseUser.getCurrentUser().getObjectId());
+                ParseCloud.callFunctionInBackground("deleteFriend", params, new FunctionCallback<String>() {
+                    @Override
+                    public void done(String object, ParseException e) {
+                        if(e != null){
+                            Toast.makeText(getContext(), "Error deleting friend", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
                 myFriends.remove(getArguments().getInt("position"));
                 deleteFriend(myFriends);
+                containerStatusFriend.setVisibility(View.GONE);
+                containerAddFriend(view);
             }
         });
     }
@@ -163,8 +192,19 @@ public class ProfileFragment extends Fragment {
                         }
                     }
                 });
+                List<ParseObject> sentRequests  = ParseUser.getCurrentUser().getList("sentRequests");
+                sentRequests.add(userSelected);
+                ParseUser newUser = ParseUser.getCurrentUser();
+                newUser.put("sentRequests", sentRequests);
+                newUser.saveInBackground();
+                containerStatusFriend.setVisibility(View.GONE);
+                containerRequestSent(view);
             }
         });
-        
+    }
+
+    public void containerRequestSent(View view){
+        containerStatusFriend = view.findViewById(R.id.containerRequestSent);
+        containerStatusFriend.setVisibility(View.VISIBLE);
     }
 }

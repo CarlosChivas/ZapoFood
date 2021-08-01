@@ -56,10 +56,11 @@ public class FriendsFragment extends Fragment {
     private ImageButton btnBackUser;
     private Boolean tMyFriends;
 
-    public static FriendsFragment newInstance(List<ParseObject> myFriends, Boolean tMyFriends) {
+    public static FriendsFragment newInstance(List<ParseObject> myFriends, List<ParseObject> myRequestsSent, Boolean tMyFriends) {
         FriendsFragment fragment = new FriendsFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList("myFriends", (ArrayList<? extends Parcelable>) myFriends);
+        args.putParcelableArrayList("myRequestsSent", (ArrayList<? extends Parcelable>) myRequestsSent);
         args.putBoolean("tMyFriends", tMyFriends);
         fragment.setArguments(args);
         return fragment;
@@ -114,7 +115,7 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onItemClick(View itemView, int position) {
                 FragmentManager fragmentManager = getParentFragmentManager();
-                ProfileFragment fragment = ProfileFragment.newInstance(allUsers.get(position), getArguments().getParcelableArrayList("myFriends"), position);
+                ProfileFragment fragment = ProfileFragment.newInstance(allUsers.get(position), getArguments().getParcelableArrayList("myFriends"), getArguments().getParcelableArrayList("myRequestsSent"), position);
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragment).commit();
             }
         });
@@ -191,6 +192,7 @@ public class FriendsFragment extends Fragment {
         }
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         query.whereMatches("username", "("+querySearch+")", "i");
+        query.whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername());
         query.setLimit(15);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
