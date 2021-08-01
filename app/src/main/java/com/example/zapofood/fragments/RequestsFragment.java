@@ -78,7 +78,6 @@ public class RequestsFragment extends Fragment {
         btnBackUser = view.findViewById(R.id.btnBackUser);
         rvRequests = view.findViewById(R.id.rvRequests);
         requests = new ArrayList<>();
-        reU = new ArrayList<>();
         requestsAdapter = new RequestsAdapter(getContext(), requests);
         rvRequests.setAdapter(requestsAdapter);
         rvRequests.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -108,10 +107,7 @@ public class RequestsFragment extends Fragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Log.i("Friends", "entro al metodo request");
         reU = ParseUser.getCurrentUser().getList("requests");
-        Log.i("Friends", "Size de request: " + reU.size());
-
         for(ParseObject parseObject : reU){
             try {
                 requests.add(parseObject.fetch());

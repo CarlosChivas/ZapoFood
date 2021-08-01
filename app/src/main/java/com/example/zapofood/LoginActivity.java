@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
                 goMainActivity();
             }
             else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
-                goOwnerMainActivity();
+                goMainActivity();
             }
         }
 
@@ -119,7 +119,8 @@ public class LoginActivity extends AppCompatActivity {
                     goMainActivity();
                 }
                 else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
-                    goOwnerMainActivity();
+
+                    goMainActivity();
                 }
                 Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
             }

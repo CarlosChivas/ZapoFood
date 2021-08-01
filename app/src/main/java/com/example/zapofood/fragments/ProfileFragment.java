@@ -21,12 +21,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.zapofood.R;
+import com.parse.FunctionCallback;
+import com.parse.ParseClassName;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProfileFragment extends Fragment {
@@ -109,18 +115,9 @@ public class ProfileFragment extends Fragment {
         tvNameProfile.setText(userSelected.getUsername());
 
         if(checkFriend()){
-            containerStatusFriend = view.findViewById(R.id.containerDeleteFriend);
-            containerStatusFriend.setVisibility(View.VISIBLE);
-            containerStatusFriend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    myFriends.remove(getArguments().getInt("position"));
-                    deleteFriend(myFriends);
-                }
-            });
+            containerDeleteFriend(view);
         }else{
-            containerStatusFriend = view.findViewById(R.id.containerAddFriend);
-            containerStatusFriend.setVisibility(View.VISIBLE);
+            containerAddFriend(view);
         }
     }
 
@@ -137,5 +134,37 @@ public class ProfileFragment extends Fragment {
         ParseUser newUser = ParseUser.getCurrentUser();
         newUser.put("friends", myFriends);
         newUser.saveInBackground();
+    }
+    public void containerDeleteFriend(View view){
+        containerStatusFriend = view.findViewById(R.id.containerDeleteFriend);
+        containerStatusFriend.setVisibility(View.VISIBLE);
+        containerStatusFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myFriends.remove(getArguments().getInt("position"));
+                deleteFriend(myFriends);
+            }
+        });
+    }
+    public void containerAddFriend(View view){
+        containerStatusFriend = view.findViewById(R.id.containerAddFriend);
+        containerStatusFriend.setVisibility(View.VISIBLE);
+        containerStatusFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<String, Object> params = new HashMap<String, Object>();
+                params.put("objectId", userSelected.getObjectId());
+                params.put("newObjectId", ParseUser.getCurrentUser().getObjectId());
+                ParseCloud.callFunctionInBackground("editUserProperty", params, new FunctionCallback<String>() {
+                    @Override
+                    public void done(String object, ParseException e) {
+                        if(e != null){
+                            Toast.makeText(getContext(), "Error sending the request", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        
     }
 }
