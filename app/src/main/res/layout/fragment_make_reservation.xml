@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_below="@id/tvNameMakeReservation"
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="30dp">
 
             <TextView
                 android:id="@+id/tvSelectADate"

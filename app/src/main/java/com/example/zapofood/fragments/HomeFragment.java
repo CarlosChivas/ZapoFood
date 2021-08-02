@@ -1,6 +1,7 @@
 package com.example.zapofood.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,8 @@ import android.graphics.PorterDuff;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,12 +19,14 @@ import androidx.annotation.Nullable;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -137,7 +142,7 @@ public class HomeFragment extends Fragment {
         rvRestaurants = view.findViewById(R.id.rvRestaurants);
         allRestaurants = new ArrayList<>();
         toolbar2 = (Toolbar) view.findViewById(R.id.toolbarSearchOptions);
-        startLocationUpdates();
+        client = LocationServices.getFusedLocationProviderClient(getActivity());
         //fetchRestaurantsScore(4);
         toolbar = (Toolbar) view.findViewById(R.id.toolbarSearch);
         configToolbar(toolbar);
@@ -156,6 +161,12 @@ public class HomeFragment extends Fragment {
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startLocationUpdates();
+            }
+        }).start();
     }
     private void configToolbar(Toolbar toolbar){
         ImageButton imageButtonSearch = toolbar.findViewById(R.id.ibSearch);
@@ -258,51 +269,85 @@ public class HomeFragment extends Fragment {
 
     // Find the user location
     protected void startLocationUpdates() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-        if (ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+        if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+        ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            getLocation();
+        } else{
+            //Request permission
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION
+            , Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //check condition
+        if(requestCode == 100 && (grantResults.length > 0) &&
+                (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)){
+            getLocation();
+        } else{
+            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    public void getLocation(){
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        //check condition
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            //When location service is enabled
+            //Get last location
+            client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
-                    task.addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            //Location location = task.getResult();
-                            if (location != null) {
-                                try {
-                                    Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-                                    //Initialize address list
-                                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                    Toast.makeText(getContext(), addresses.get(0).getLocality()/*getAddressLine(0)*/, Toast.LENGTH_SHORT).show();
-                                    userAddress = addresses.get(0);
-                                    userCurrentCity = addresses.get(0).getLocality();
-                                    configToolbar2(toolbar2);
-                                    queryRestaurants(userCurrentCity);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                    Location location = task.getResult();
+                    if(location != null){
+                       initWithLocation(location);
+                    } else{
+                        LocationRequest locationRequest = new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                .setInterval(10000)
+                                .setFastestInterval(1000)
+                                .setNumUpdates(1);
+                        //Initialize location call back
+                        LocationCallback locationCallback = new LocationCallback() {
+                            @Override
+                            public void onLocationResult(@NonNull LocationResult locationResult) {
+                                super.onLocationResult(locationResult);
+                                Location location1 = locationResult.getLastLocation();
+                                initWithLocation(location1);
                             }
-                            else {
-                                Toast.makeText(getContext(), "Error with location", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                    task.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull  Exception e) {
-                            Toast.makeText(getContext(), "Fallo: "+ e, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
+                        };
+                        client.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper());
+                    }
                 }
             });
+        }
+        else {
+            //When location service is not enabled
+            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        }
+    }
+
+    public void initWithLocation(Location location){
+        try {
+            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+            //Initialize address list
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            Toast.makeText(getContext(), addresses.get(0).getLocality(), Toast.LENGTH_SHORT).show();
+            userAddress = addresses.get(0);
+            userCurrentCity = addresses.get(0).getLocality();
+            configToolbar2(toolbar2);
+            queryRestaurants(userCurrentCity);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     //Method to get the Restaurants
     protected void queryRestaurants(String city) {
         ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);
-        //query.whereEqualTo(Restaurant.KEY_CITY, city);
         query.whereMatches("city", "("+city+")", "i");
         query.setLimit(20);
         query.findInBackground(new FindCallback<Restaurant>() {
@@ -325,8 +370,6 @@ public class HomeFragment extends Fragment {
     //Method to find restaurants
     private void fetchRestaurantsName(String name){
         ParseQuery<Restaurant> query = ParseQuery.getQuery(Restaurant.class);
-        //query.whereEqualTo(Restaurant.KEY_NAME, name);
-        //query.whereContains("name", name);
         query.whereMatches("name", "("+name+")", "i");
         query.setLimit(20);
         query.findInBackground(new FindCallback<Restaurant>() {
@@ -365,5 +408,4 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
 }
