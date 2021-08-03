@@ -135,7 +135,6 @@ public class UserFragment extends Fragment {
         friends = new ArrayList<>();
         allFriends = new ArrayList<>();
         myRequestsSent = new ArrayList<>();
-        tvAmountFriends.setText(allFriends.size() + " friends");
         friendsAdapter = new FriendsAdapter(getContext(), friends);
         rvPreviewFriends.setHasFixedSize(true);
         rvPreviewFriends.setAdapter(friendsAdapter);
@@ -182,6 +181,7 @@ public class UserFragment extends Fragment {
                     @Override
                     public void run() {
                         friendsAdapter.notifyDataSetChanged();
+                        tvAmountFriends.setText(allFriends.size() + " friends");
                     }
                 });
             }

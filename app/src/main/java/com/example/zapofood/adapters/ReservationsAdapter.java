@@ -25,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -48,6 +49,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -115,6 +117,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         private TextView tvReservationTime;
         private ImageButton ibReservationDelete;
         private ImageButton btnShowRute;
+        private ImageButton btnShowAssistants;
         private Address address;
         private TextView tvInvitedBy;
         final View rootView;
@@ -128,6 +131,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         tvReservationTime = itemView.findViewById(R.id.tvReservationTime);
         ibReservationDelete = itemView.findViewById(R.id.ibReservationDelete);
         btnShowRute = itemView.findViewById(R.id.btnShowRute);
+        btnShowAssistants = itemView.findViewById(R.id.btnShowAssistants);
         tvInvitedBy = itemView.findViewById(R.id.tvInvitedBy);
 
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -152,6 +156,13 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         if(!reservation.getUser().fetch().getUsername().equals(ParseUser.getCurrentUser().getUsername())){
             tvInvitedBy.setVisibility(View.VISIBLE);
             tvInvitedBy.setText("Invited by "+reservation.getUser().fetch().getUsername());
+            btnShowAssistants.setVisibility(View.VISIBLE);
+            btnShowAssistants.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showAssistants(reservation);
+                }
+            });
         }
         ibReservationDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,6 +294,38 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         intent.setPackage("com.google.android.apps.maps");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    public void showAssistants(Reservation reservation){
+        dialogBuilder = new AlertDialog.Builder(itemView.getContext());
+        final View assistantsView = LayoutInflater.from(context).inflate(R.layout.invite_friend, null);
+        RecyclerView rvAssistants = assistantsView.findViewById(R.id.rvFriends);
+        List<ParseObject> assistants = new ArrayList<>();
+        FriendsAdapter friendsAdapter = new FriendsAdapter(assistantsView.getContext(), assistants);
+        rvAssistants.setHasFixedSize(true);
+        rvAssistants.setAdapter(friendsAdapter);
+        rvAssistants.setLayoutManager(new GridLayoutManager(assistantsView.getContext(), 3));
+        friendsAdapter.setOnItemClickListener(new FriendsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+
+            }
+        });
+
+        dialogBuilder.setView(assistantsView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        List<ParseObject> parseObjectsList = reservation.getList("persons");
+        parseObjectsList.add(reservation.getUser());
+        for(ParseObject parseObject : parseObjectsList){
+            try {
+                assistants.add(parseObject.fetch());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        friendsAdapter.notifyDataSetChanged();
     }
     }
 }
