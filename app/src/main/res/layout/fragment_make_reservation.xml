@@ -14,21 +14,55 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentInsetStart="0dp">
-
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Make a reservation"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                android:textColor="@color/black"/>
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/btnCancelReservation"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/cancel_reservation"
+                    android:src="@drawable/ic_baseline_cancel_24"
+                    app:tint="#FFF9F9"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reservation"
+                    android:textAlignment="center"
+                    android:textSize="24sp"
+                    android:textColor="@color/black"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="80dp"
+                    android:layout_marginEnd="100dp"/>
+
+                <Button
+                    android:id="@+id/btnReservationDone"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#7DBF3B"
+                    android:text="Done"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    />
+            </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="#FF7F23"
+            android:layout_below="@id/toolbarMakeReservation"/>
 
         <ImageView
             android:id="@+id/ivImageMakeReservation"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             tools:src="@tools:sample/avatars"
             android:layout_below="@+id/toolbarMakeReservation"
             android:layout_centerHorizontal="true"
@@ -42,23 +76,23 @@
             android:text="Restaurant Name"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="#EDEDED"
             android:textAlignment="center"
             android:layout_marginTop="15dp"/>
 
         <RelativeLayout
             android:id="@+id/containerDate"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="50dp"
             android:layout_below="@id/tvNameMakeReservation"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="50dp">
 
             <TextView
                 android:id="@+id/tvSelectADate"
                 android:layout_width="100dp"
                 android:layout_marginStart="30dp"
                 android:layout_height="45dp"
-                android:text="Date: "
+                android:text="Date "
                 android:textSize="22sp"
                 android:padding="5dp"
                 android:textAlignment="center"
@@ -90,7 +124,7 @@
         <RelativeLayout
             android:id="@+id/containerTime"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="50dp"
             android:layout_below="@id/containerDate">
 
             <TextView
@@ -125,30 +159,42 @@
                 app:tint="#000000"
                 android:src="@drawable/ic_time"
                 android:layout_centerVertical="true"/>
-
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/btnReservationDone"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/containerInviteFriends"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#7DBF3B"
-            android:layout_marginStart="80dp"
-            android:layout_below="@id/containerTime"
-            android:layout_marginTop="45dp"
-            android:text="Done" />
+            android:layout_below="@+id/containerTime"
+            android:layout_marginTop="20dp">
 
-        <ImageButton
-            android:id="@+id/btnCancelReservation"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:background="@drawable/cancel_reservation"
-            android:src="@drawable/ic_baseline_cancel_24"
-            android:layout_below="@id/containerTime"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="80dp"
-            android:layout_marginTop="50dp"
-            app:tint="#FFF9F9" />
+            <TextView
+                android:id="@+id/tvInviteFriends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invite some friends"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginStart="10dp"/>
+
+            <Button
+                android:id="@+id/btnInviteFriends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invite Friends"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="#FF7F23"/>
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFriendsInvited"
+            android:layout_width="match_parent"
+            android:layout_height="165dp"
+            android:layout_below="@id/containerInviteFriends"
+            android:orientation="horizontal"
+            />
 
     </RelativeLayout>
 </FrameLayout>

@@ -3,12 +3,17 @@ package com.example.zapofood.fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Point;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,9 +31,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.zapofood.R;
+import com.example.zapofood.adapters.FriendsAdapter;
 import com.example.zapofood.models.Reservation;
 import com.example.zapofood.models.Restaurant;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -39,6 +46,7 @@ import com.parse.SaveCallback;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +73,17 @@ public class MakeReservationFragment extends Fragment {
     private int hourDate, minuteDate;
     private ImageView ivImageMakeReservation;
     private TextView tvNameMakeReservation;
+    private Button btnInviteFriends;
+    private RecyclerView rvFriendsInvited;
+    private RecyclerView rvInviteFriends;
+    private FriendsAdapter friendsInvitedAdapter;
+    private FriendsAdapter friendsAdapter;
+    private List<ParseObject> myFriends;
+    private List<ParseObject> friendsInvited;
     Restaurant restaurant;
+
+    AlertDialog.Builder dialogBuilder;
+    AlertDialog dialog;
 
     Calendar calendar = Calendar.getInstance();
     int year = calendar.get(Calendar.YEAR);
@@ -121,12 +139,38 @@ public class MakeReservationFragment extends Fragment {
         ibSelectTime = view.findViewById(R.id.btnSelectTime);
         ivImageMakeReservation = view.findViewById(R.id.ivImageMakeReservation);
         tvNameMakeReservation = view.findViewById(R.id.tvNameMakeReservation);
+        btnInviteFriends = view.findViewById(R.id.btnInviteFriends);
+
+        friendsInvited = new ArrayList<>();
+        rvFriendsInvited = view.findViewById(R.id.rvFriendsInvited);
+        friendsInvitedAdapter = new FriendsAdapter(getContext(), friendsInvited);
+        rvFriendsInvited.setAdapter(friendsInvitedAdapter);
+
+        LinearLayoutManager mn = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false) {
+            @Override
+            public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
+                // force height of viewHolder here, this will override layout_height from xml
+                lp.width = getWidth() / 4;
+                return true;
+            }
+        };
+
+
+        rvFriendsInvited.setLayoutManager(mn);
+
 
         restaurant = getArguments().getParcelable("restaurant");
 
         ParseFile image = restaurant.getImage();
         Glide.with(getContext()).load(image.getUrl()).into(ivImageMakeReservation);
         tvNameMakeReservation.setText(restaurant.getName());
+
+        btnInviteFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inviteFriends();
+            }
+        });
 
         ibSelectTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,6 +229,7 @@ public class MakeReservationFragment extends Fragment {
                 reservation.setUser(ParseUser.getCurrentUser());
                 calendar.set(year, month, day, hourDate, minuteDate);
                 reservation.setDate(calendar.getTime());
+                reservation.setPersons(friendsInvited);
                 reservation.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -200,5 +245,54 @@ public class MakeReservationFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void inviteFriends(){
+        dialogBuilder = new AlertDialog.Builder(getContext());
+        final View inviteFriendsView = LayoutInflater.from(getContext()).inflate(R.layout.invite_friend, null);
+        rvInviteFriends = inviteFriendsView.findViewById(R.id.rvFriends);
+        myFriends = new ArrayList<>();
+        friendsAdapter = new FriendsAdapter(getContext(), myFriends);
+        rvInviteFriends.setHasFixedSize(true);
+        rvInviteFriends.setAdapter(friendsAdapter);
+        rvInviteFriends.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        friendsAdapter.setOnItemClickListener(new FriendsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                if(friendsInvited.contains(myFriends.get(position))){
+                    Toast.makeText(getContext(), "This user already was invited", Toast.LENGTH_SHORT).show();
+                 }
+                else{
+                    Toast.makeText(getContext(), "Invited", Toast.LENGTH_SHORT).show();
+                    friendsInvited.add(myFriends.get(position));
+                    friendsInvitedAdapter.notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialogBuilder.setView(inviteFriendsView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<ParseObject> bFriends = ParseUser.getCurrentUser().getList("friends");
+                for(ParseObject parseObject : bFriends){
+                    try {
+                        myFriends.add(parseObject.fetch());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        friendsAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
 }

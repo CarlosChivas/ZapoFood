@@ -7,6 +7,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.Date;
+import java.util.List;
 
 @ParseClassName("Reservation")
 public class Reservation extends ParseObject{
@@ -14,6 +15,7 @@ public class Reservation extends ParseObject{
     public static final String KEY_RESTAURANT = "restaurant";
     public static final String KEY_DATE = "date";
     public static final String KEY_STATUS = "status";
+    public static final String KEY_PERSONS = "persons";
 
     public void setDate(Date date){
         put(KEY_DATE, date);
@@ -38,4 +40,6 @@ public class Reservation extends ParseObject{
         put(KEY_USER, user);
     }
     public Boolean getStatus(){ return getBoolean(KEY_STATUS); }
+    public void setPersons(List<ParseObject> persons) { put(KEY_PERSONS, persons);}
+    //public void setType()
 }

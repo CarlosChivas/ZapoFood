@@ -302,9 +302,12 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
                     Location location = task.getResult();
+                    //Location location = null;
                     if(location != null){
+                        Log.i("Location", "Entro sin null location");
                        initWithLocation(location);
                     } else{
+                        Log.i("Location", "Null location");
                         LocationRequest locationRequest = new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                                 .setInterval(10000)
                                 .setFastestInterval(1000)
@@ -315,7 +318,9 @@ public class HomeFragment extends Fragment {
                             public void onLocationResult(@NonNull LocationResult locationResult) {
                                 super.onLocationResult(locationResult);
                                 Location location1 = locationResult.getLastLocation();
-                                initWithLocation(location1);
+                                if (location1 != null){
+                                    initWithLocation(location1);
+                                }
                             }
                         };
                         client.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper());

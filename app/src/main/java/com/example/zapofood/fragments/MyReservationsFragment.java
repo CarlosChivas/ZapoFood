@@ -23,7 +23,9 @@ import com.example.zapofood.adapters.RestaurantsAdapter;
 import com.example.zapofood.models.Reservation;
 import com.example.zapofood.models.Restaurant;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -99,17 +101,22 @@ public class MyReservationsFragment extends Fragment {
     private void getMyReservations(){
         ParseQuery<Reservation> query = ParseQuery.getQuery(Reservation.class);
         query.whereEqualTo(Reservation.KEY_USER, ParseUser.getCurrentUser());
-        query.setLimit(20);
-        query.findInBackground(new FindCallback<Reservation>() {
-            @Override
-            public void done(List<Reservation> reservations, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting posts", e);
-                    return;
-                }
+
+        //Find the reservations in where the user was invited
+        ParseQuery<Reservation> query2 = ParseQuery.getQuery(Reservation.class);
+        query2.whereContains("persons.objectId", ParseUser.getCurrentUser().getObjectId());
+
+        List<ParseQuery<Reservation>> queries = new ArrayList<ParseQuery<Reservation>>();
+        queries.add(query);
+        queries.add(query2);
+        ParseQuery<Reservation> mainQuery = ParseQuery.or(queries);
+        mainQuery.findInBackground((myReservationsNew, e) -> {
+            if(e == null){
                 myReservations.clear();
-                myReservations.addAll(reservations);
+                myReservations.addAll(myReservationsNew);
                 reservationsAdapter.notifyDataSetChanged();
+            }else{
+                Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
