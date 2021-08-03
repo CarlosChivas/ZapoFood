@@ -36,10 +36,12 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,6 +116,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         private ImageButton ibReservationDelete;
         private ImageButton btnShowRute;
         private Address address;
+        private TextView tvInvitedBy;
         final View rootView;
 
     public ViewHolder(@NonNull View itemView, final OnItemClickListener clickListener) {
@@ -125,6 +128,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         tvReservationTime = itemView.findViewById(R.id.tvReservationTime);
         ibReservationDelete = itemView.findViewById(R.id.ibReservationDelete);
         btnShowRute = itemView.findViewById(R.id.btnShowRute);
+        tvInvitedBy = itemView.findViewById(R.id.tvInvitedBy);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +149,10 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         String curTime = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
         tvReservationDate.setText(month(calendar.get(Calendar.MONTH)) + " " + calendar.get(Calendar.DAY_OF_MONTH));
         tvReservationTime.setText(" - " + curTime);
+        if(!reservation.getUser().fetch().getUsername().equals(ParseUser.getCurrentUser().getUsername())){
+            tvInvitedBy.setVisibility(View.VISIBLE);
+            tvInvitedBy.setText("Invited by "+reservation.getUser().fetch().getUsername());
+        }
         ibReservationDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
