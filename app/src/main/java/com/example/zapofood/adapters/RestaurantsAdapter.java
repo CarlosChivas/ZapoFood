@@ -1,18 +1,27 @@
 package com.example.zapofood.adapters;
 
 import android.content.Context;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import com.example.zapofood.MainActivity;
 import com.example.zapofood.R;
+import com.example.zapofood.models.Reservation;
 import com.example.zapofood.models.Restaurant;
 import com.parse.ParseFile;
 
@@ -88,6 +97,14 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
                     clickListener.onItemClick(itemView, getAdapterPosition());
                 }
             });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(itemView.getContext(), "Long tap", Toast.LENGTH_SHORT).show();
+                    addFavorites();
+                    return false;
+                }
+            });
         }
 
         public void bind(Restaurant restaurant) {
@@ -95,6 +112,17 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             tvItemName.setText(restaurant.getName());
             ParseFile image = restaurant.getImage();
             Glide.with(context).load(image.getUrl()).into(ivItemImage);
+        }
+        public void addFavorites(){
+            AlertDialog.Builder dialogBuilder;
+            AlertDialog dialog;
+            dialogBuilder = new AlertDialog.Builder(itemView.getContext());
+            final View deleteReservationView = LayoutInflater.from(context).inflate(R.layout.confirm_delete, null);
+            Button btnConfirmDeletion;
+            Button btnCancelDeletion;
+            dialogBuilder.setView(deleteReservationView);
+            dialog = dialogBuilder.create();
+            dialog.show();
         }
     }
 }

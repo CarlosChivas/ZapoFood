@@ -1,5 +1,7 @@
 package com.example.zapofood.fragments;
 
+import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,13 +9,34 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.zapofood.R;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnalyticsFragment extends Fragment {
 
@@ -28,6 +51,7 @@ public class AnalyticsFragment extends Fragment {
 
     // in this example, a LineChart is initialized from xml
     private LineChart chart;
+    private BarChart barChart;
     private ImageButton btnBackUser;
 
     public AnalyticsFragment() {
@@ -63,6 +87,7 @@ public class AnalyticsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         btnBackUser = view.findViewById(R.id.btnBackUser);
         chart = view.findViewById(R.id.chart);
+        barChart = view.findViewById(R.id.barChart);
 
         btnBackUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,5 +96,65 @@ public class AnalyticsFragment extends Fragment {
                 fragmentManager.popBackStack();
             }
         });
+        barData();
+    }
+
+    public void barData(){
+        final ArrayList<String> xAxisLabel = new ArrayList<>();
+        xAxisLabel.add("Ene");
+        xAxisLabel.add("Feb");
+        xAxisLabel.add("Mar");
+        xAxisLabel.add("Abr");
+        xAxisLabel.add("May");
+        xAxisLabel.add("Jun");
+        xAxisLabel.add("Jul");
+        xAxisLabel.add("Ago");
+        xAxisLabel.add("Sep");
+        xAxisLabel.add("Oct");
+        xAxisLabel.add("Nov");
+        xAxisLabel.add("Dic");
+
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+
+        ValueFormatter formatter = new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return xAxisLabel.get((int) value);
+            }
+        };
+
+        xAxis.setGranularity(1f);
+        xAxis.setValueFormatter(formatter);
+
+        barChart.setDrawGridBackground(false);
+        barChart.getAxisRight().setEnabled(false);
+        barChart.getDescription().setEnabled(false);
+
+        ArrayList<BarEntry> reservations = new ArrayList<>();
+        List<Object> historyReservations = null;
+        try {
+            historyReservations = ParseUser.getCurrentUser().fetch().getList("historyReservations");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        for(int i =0; i<historyReservations.size(); i++){
+            reservations.add(new BarEntry(i,(int)historyReservations.get(i)));
+        }
+
+        BarDataSet barDataSet = new BarDataSet(reservations, "Reservations made by month");
+        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSet.setValueTextColor(Color.BLACK);
+        barDataSet.setValueTextSize(12f);
+        barDataSet.setDrawValues(false);
+
+        BarData barData = new BarData(barDataSet);
+        barChart.animateXY(2000, 2000);
+        barChart.setFitBars(true);
+        barChart.setData(barData);
+
     }
 }
