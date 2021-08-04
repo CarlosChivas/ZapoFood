@@ -43,6 +43,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -156,6 +157,21 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         if(!reservation.getUser().fetch().getUsername().equals(ParseUser.getCurrentUser().getUsername())){
             tvInvitedBy.setVisibility(View.VISIBLE);
             tvInvitedBy.setText("Invited by "+reservation.getUser().fetch().getUsername());
+            ibReservationDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmDeleteInvitation(reservation);
+                }
+            });
+        }else{
+            ibReservationDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmDeleteReservation(reservation);
+                }
+            });
+        }
+        if(reservation.getList("persons").size()>0) {
             btnShowAssistants.setVisibility(View.VISIBLE);
             btnShowAssistants.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -164,18 +180,13 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
                 }
             });
         }
-        ibReservationDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmDeleteReservation(reservation);
-            }
-        });
         btnShowRute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getLocation(restaurant);
             }
         });
+
     }
 
     private String month(int num){
@@ -207,6 +218,33 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         }
     }
 
+    public void confirmDeleteInvitation(Reservation reservation){
+        dialogBuilder = new AlertDialog.Builder(itemView.getContext());
+        final View deleteReservationView = LayoutInflater.from(context).inflate(R.layout.confirm_delete, null);
+        Button btnConfirmDeletion;
+        Button btnCancelDeletion;
+
+        btnConfirmDeletion = deleteReservationView.findViewById(R.id.btnConfirmDeletion);
+        btnCancelDeletion = deleteReservationView.findViewById(R.id.btnCancelDeletion);
+
+        dialogBuilder.setView(deleteReservationView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        btnConfirmDeletion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteInvitation(reservation);
+                dialog.dismiss();
+            }
+        });
+        btnCancelDeletion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
     public void confirmDeleteReservation(Reservation reservation){
         dialogBuilder = new AlertDialog.Builder(itemView.getContext());
         final View deleteReservationView = LayoutInflater.from(context).inflate(R.layout.confirm_delete, null);
@@ -259,6 +297,33 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
                 Toast.makeText(itemView.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    public void deleteInvitation(Reservation reservation){
+        List<ParseObject> assistants = reservation.getList("persons");
+        int position=-1;
+        for (ParseObject parseObject : assistants){
+            position++;
+            if(parseObject.equals(ParseUser.getCurrentUser())){
+                break;
+            }
+        }
+        Log.i("Reservations", "Size: " + reservation.getList("persons").size());
+        Log.i("Reservations", "Size: " + assistants.size() + " position: "+position);
+        assistants.remove(position);
+        Log.i("Reservations", "Size: " + assistants.size());
+        reservation.put("persons", assistants);
+        reservation.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null){
+                    Toast.makeText(context.getApplicationContext(), "Error deleting", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context.getApplicationContext(), "Todo cool", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        reservations.remove(reservation);
+        notifyItemRemoved(getAdapterPosition());
     }
 
     public void getLocation(Restaurant restaurant){

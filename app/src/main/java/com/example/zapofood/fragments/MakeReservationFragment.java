@@ -155,9 +155,14 @@ public class MakeReservationFragment extends Fragment {
             }
         };
 
-
         rvFriendsInvited.setLayoutManager(mn);
-
+        friendsInvitedAdapter.setOnItemClickListener(new FriendsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                friendsInvited.remove(position);
+                friendsInvitedAdapter.notifyItemRemoved(position);
+            }
+        });
 
         restaurant = getArguments().getParcelable("restaurant");
 
@@ -202,7 +207,6 @@ public class MakeReservationFragment extends Fragment {
                 fragmentManager.popBackStack();
             }
         });
-
 
         ibSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override

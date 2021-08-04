@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.zapofood.LoginActivity;
@@ -63,6 +64,7 @@ public class UserFragment extends Fragment {
     private TextView tvAmountFriends;
     private Button btnSeeAllFriends;
     private Button btnRequestsFriends;
+    private Button btnAnalytics;
 
     public static UserFragment newInstance(ParseUser user, List<ParseObject> friends, List<ParseObject> allFriends) {
         UserFragment fragmentDemo = new UserFragment();
@@ -117,10 +119,12 @@ public class UserFragment extends Fragment {
         tvAmountFriends = view.findViewById(R.id.tvAmountFriends);
         btnSeeAllFriends = view.findViewById(R.id.btnSeeAllFriends);
         btnRequestsFriends = view.findViewById(R.id.btnRequestsFriends);
+        btnAnalytics = view.findViewById(R.id.btnAnalytics);
 
         ParseFile image = currentUser.getParseFile("image");
         Glide.with(getContext()).load(image.getUrl()).circleCrop().into(ivImageProfile);
         tvNameProfile.setText(currentUser.getUsername());
+
         btnAddFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +134,7 @@ public class UserFragment extends Fragment {
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
         });
+
         //friends = getArguments().getParcelableArrayList("friends");
         //allFriends = getArguments().getParcelableArrayList("allFriends");
         friends = new ArrayList<>();
@@ -163,6 +168,15 @@ public class UserFragment extends Fragment {
                 FragmentManager fragmentManager = getParentFragmentManager();
                 //RequestsFragment fragmentDemo = RequestsFragment.newInstance(currentUser.getList("requests"));
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, new RequestsFragment()).commit();
+            }
+        });
+
+        btnAnalytics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                //RequestsFragment fragmentDemo = RequestsFragment.newInstance(currentUser.getList("requests"));
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, new AnalyticsFragment()).commit();
             }
         });
 
