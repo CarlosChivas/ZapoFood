@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -23,7 +24,11 @@ import com.example.zapofood.MainActivity;
 import com.example.zapofood.R;
 import com.example.zapofood.models.Reservation;
 import com.example.zapofood.models.Restaurant;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -100,7 +105,6 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Toast.makeText(itemView.getContext(), "Long tap", Toast.LENGTH_SHORT).show();
                     addFavorites();
                     return false;
                 }
@@ -117,12 +121,50 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             AlertDialog.Builder dialogBuilder;
             AlertDialog dialog;
             dialogBuilder = new AlertDialog.Builder(itemView.getContext());
-            final View deleteReservationView = LayoutInflater.from(context).inflate(R.layout.confirm_delete, null);
-            Button btnConfirmDeletion;
-            Button btnCancelDeletion;
-            dialogBuilder.setView(deleteReservationView);
+            final View addFavoritesView = LayoutInflater.from(context).inflate(R.layout.add_favorites, null);
+            RelativeLayout containerAddToFavorites = addFavoritesView.findViewById(R.id.containerAddToFavorites);
+            dialogBuilder.setView(addFavoritesView);
             dialog = dialogBuilder.create();
             dialog.show();
+            containerAddToFavorites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isInFavorites(restaurants.get(getAdapterPosition()))){
+                        Toast.makeText(itemView.getContext(), "Restaurant already is in favorites", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    } else{
+                        dialog.dismiss();
+                        Toast.makeText(itemView.getContext(), "Restaurant saved in favorites", Toast.LENGTH_SHORT).show();
+                        List<ParseObject> myFavorites = null;
+                        try {
+                            myFavorites = ParseUser.getCurrentUser().fetch().getList("favorites");
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        myFavorites.add(restaurants.get(getAdapterPosition()));
+                        ParseUser.getCurrentUser().put("favorites", myFavorites);
+                        ParseUser.getCurrentUser().saveInBackground();
+                    };
+                }
+            });
+        }
+        public boolean isInFavorites(Restaurant restaurant){
+            List<ParseObject> myFavorites = null;
+            try {
+                myFavorites = ParseUser.getCurrentUser().fetch().getList("favorites");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            for(ParseObject parseObject : myFavorites){
+                try {
+                    if(parseObject.fetch().getObjectId().equals(restaurant.getObjectId())){
+                        return true;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            return false;
         }
     }
 }
