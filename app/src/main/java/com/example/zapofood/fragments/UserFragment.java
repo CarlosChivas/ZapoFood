@@ -28,6 +28,7 @@ import com.example.zapofood.MainActivity;
 import com.example.zapofood.R;
 import com.example.zapofood.adapters.FriendsAdapter;
 import com.example.zapofood.models.Restaurant;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -65,6 +66,7 @@ public class UserFragment extends Fragment {
     private Button btnSeeAllFriends;
     private Button btnRequestsFriends;
     private Button btnAnalytics;
+    private Button btnFavorites;
 
     public static UserFragment newInstance(ParseUser user, List<ParseObject> friends, List<ParseObject> allFriends) {
         UserFragment fragmentDemo = new UserFragment();
@@ -120,6 +122,7 @@ public class UserFragment extends Fragment {
         btnSeeAllFriends = view.findViewById(R.id.btnSeeAllFriends);
         btnRequestsFriends = view.findViewById(R.id.btnRequestsFriends);
         btnAnalytics = view.findViewById(R.id.btnAnalytics);
+        btnFavorites = view.findViewById(R.id.btnFavorites);
 
         ParseFile image = currentUser.getParseFile("image");
         Glide.with(getContext()).load(image.getUrl()).circleCrop().into(ivImageProfile);
@@ -177,6 +180,15 @@ public class UserFragment extends Fragment {
                 FragmentManager fragmentManager = getParentFragmentManager();
                 //RequestsFragment fragmentDemo = RequestsFragment.newInstance(currentUser.getList("requests"));
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, new AnalyticsFragment()).commit();
+            }
+        });
+
+        btnFavorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                //RequestsFragment fragmentDemo = RequestsFragment.newInstance(currentUser.getList("requests"));
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, new FavoritesFragment()).commit();
             }
         });
 

@@ -109,6 +109,13 @@
             android:layout_below="@id/btnRequestsFriends"/>
 
         <Button
+            android:id="@+id/btnFavorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favorites"
+            android:layout_below="@id/btnAnalytics"/>
+
+        <Button
             android:id="@+id/btnUserLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
