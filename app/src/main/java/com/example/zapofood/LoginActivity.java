@@ -45,12 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if(ParseUser.getCurrentUser() != null){
-            if(ParseUser.getCurrentUser().getString("type").equals("user")){
-                goMainActivity();
-            }
-            else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
-                goMainActivity();
-            }
+            goMainActivity();
         }
 
         etLoginUsername = findViewById(R.id.etLoginUsername);
@@ -94,8 +89,6 @@ public class LoginActivity extends AppCompatActivity {
                         if(user == null){
                             Log.d("Login", "Usuario null");
                         }else{
-                            Log.d("Login", "Todo perfecto!");
-                            Log.d("Login", ParseUser.getCurrentUser().toString());
                             Collection<String> permissions = Arrays.asList("public_profile", "email");
                             if (!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
                                 ParseFacebookUtils.linkWithReadPermissionsInBackground(ParseUser.getCurrentUser(), LoginActivity.this, permissions, ex -> {
@@ -105,12 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-                            if(ParseUser.getCurrentUser().getString("type").equals("user")){
-                                goMainActivity();
-                            }
-                            else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
-                                goOwnerMainActivity();
-                            }
+                            goMainActivity();
                         }
                     }
                 }
@@ -131,7 +119,6 @@ public class LoginActivity extends AppCompatActivity {
                     goMainActivity();
                 }
                 else if (ParseUser.getCurrentUser().getString("type").equals("owner")){
-
                     goMainActivity();
                 }
                 Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
@@ -144,57 +131,6 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    //Go to the main activity for owners
-    private void goOwnerMainActivity(){
-        Intent intent = new Intent(this, OwnerMainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-
-    private void loginFacebook(){
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setTitle("Please, wait a moment.");
-        dialog.setMessage("Logging in...");
-        dialog.show();
-        Collection<String> permissions = Arrays.asList("public_profile", "email");
-        Log.i("FacebookLoginExample", "Apunto de entrar");
-        ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, (user, err) -> {
-            Log.i("FacebookLoginExample", "Entro");
-            dialog.dismiss();
-            if (err != null) {
-                Log.e("FacebookLoginExample", "done: ", err);
-                Log.i("FacebookLoginExample", "Entro1");
-                Toast.makeText(this, err.getMessage(), Toast.LENGTH_LONG).show();
-            } else if (user == null) {
-                Toast.makeText(this, "The user cancelled the Facebook login.", Toast.LENGTH_LONG).show();
-                Log.d("FacebookLoginExample", "Uh oh. The user cancelled the Facebook login.");
-                Log.i("FacebookLoginExample", "Entro2");
-            } else if (user.isNew()) {
-                Toast.makeText(this, "User signed up and logged in through Facebook.", Toast.LENGTH_LONG).show();
-                Log.d("FacebookLoginExample", "User signed up and logged in through Facebook!");
-                Log.i("FacebookLoginExample", "Entro3");
-            } else {
-                Toast.makeText(this, "User logged in through Facebook.", Toast.LENGTH_LONG).show();
-                Log.d("FacebookLoginExample", "User logged in through Facebook!");
-                Log.i("FacebookLoginExample", "Entro4");
-
-            }
-            Log.i("FacebookLoginExample", "Entro5");
-            //Collection<String> permissions2 = Arrays.asList("public_profile", "email");
-            /*if (!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
-                ParseFacebookUtils.linkWithReadPermissionsInBackground(ParseUser.getCurrentUser(), this, permissions, ex -> {
-                    if (ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
-                        Toast.makeText(this, "Woohoo, user logged in with Facebook.", Toast.LENGTH_LONG).show();
-                        Log.d("FacebookLoginExample", "Woohoo, user logged in with Facebook!");
-                    }
-                });
-            } else {
-                Toast.makeText(this, "You have already linked your account with Facebook.", Toast.LENGTH_LONG).show();
-            }*/
-        });
     }
 
     @Override
