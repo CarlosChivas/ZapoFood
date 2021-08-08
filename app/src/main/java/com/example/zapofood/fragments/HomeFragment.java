@@ -160,7 +160,6 @@ public class HomeFragment extends Fragment {
                 RestaurantDetailsFragment fragmentDemo = RestaurantDetailsFragment.newInstance(allRestaurants.get(position), userAddress);
                 fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContainer, fragmentDemo).commit();
             }
-
         });
         new Thread(new Runnable() {
             @Override

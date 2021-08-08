@@ -101,26 +101,42 @@
             android:backgroundTint="#CFD1D1"
             android:textColor="@color/black"/>
 
-        <Button
+
+        <ImageButton
             android:id="@+id/btnAnalytics"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:text="Analytics"
-            android:layout_below="@id/btnRequestsFriends"/>
+            android:layout_below="@id/btnRequestsFriends"
+            android:src="@drawable/ic_analytics"
+            android:background="@drawable/assistants_reservation"
+            app:tint="#FFFFFF"
+            android:layout_marginTop="60dp"
+            android:layout_marginStart="40dp"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/btnFavorites"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:text="Favorites"
-            android:layout_below="@id/btnAnalytics"/>
+            android:layout_below="@id/btnRequestsFriends"
+            android:src="@drawable/ic_favorites"
+            android:background="@drawable/assistants_reservation"
+            app:tint="#FFFFFF"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/btnUserLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LogOut"
-            android:layout_alignParentBottom="true"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_logout"
+            android:layout_below="@id/btnRequestsFriends"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/cancel_reservation"
+            app:tint="@color/white"
+            android:layout_marginEnd="40dp"/>
 
     </RelativeLayout>
 

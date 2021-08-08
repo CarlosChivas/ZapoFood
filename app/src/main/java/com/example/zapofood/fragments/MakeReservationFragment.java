@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MakeReservationFragment extends Fragment {
 
@@ -247,6 +248,12 @@ public class MakeReservationFragment extends Fragment {
                         fragmentManager.popBackStack();
                     }
                 });
+                int amount = (int) ParseUser.getCurrentUser().getNumber("reservations");
+                List<ParseObject> restaurants = ParseUser.getCurrentUser().getList("historyRestaurant");
+                restaurants.add(restaurant);
+                ParseUser.getCurrentUser().put("reservations", amount+1);
+                ParseUser.getCurrentUser().put("historyRestaurant", restaurants);
+                ParseUser.getCurrentUser().saveInBackground();
             }
         });
     }

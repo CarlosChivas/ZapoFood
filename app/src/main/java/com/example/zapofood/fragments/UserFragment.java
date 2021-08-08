@@ -53,7 +53,7 @@ public class UserFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Button btnUserLogout;
+    private ImageButton btnUserLogout;
     private ImageView ivImageProfile;
     private TextView tvNameProfile;
     private RecyclerView rvPreviewFriends;
@@ -65,8 +65,8 @@ public class UserFragment extends Fragment {
     private TextView tvAmountFriends;
     private Button btnSeeAllFriends;
     private Button btnRequestsFriends;
-    private Button btnAnalytics;
-    private Button btnFavorites;
+    private ImageButton btnAnalytics;
+    private ImageButton btnFavorites;
 
     public static UserFragment newInstance(ParseUser user, List<ParseObject> friends, List<ParseObject> allFriends) {
         UserFragment fragmentDemo = new UserFragment();
@@ -138,8 +138,6 @@ public class UserFragment extends Fragment {
             }
         });
 
-        //friends = getArguments().getParcelableArrayList("friends");
-        //allFriends = getArguments().getParcelableArrayList("allFriends");
         friends = new ArrayList<>();
         allFriends = new ArrayList<>();
         myRequestsSent = new ArrayList<>();
