@@ -1,5 +1,6 @@
 package com.example.zapofood.fragments;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -98,6 +99,10 @@ public class AnalyticsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final ProgressDialog dialog = new ProgressDialog(getContext());
+        dialog.setTitle("Please, wait a moment.");
+        dialog.setMessage("Logging in...");
+        dialog.show();
         btnBackUser = view.findViewById(R.id.btnBackUser);
         chart = view.findViewById(R.id.chart);
         barChart = view.findViewById(R.id.barChart);
@@ -111,9 +116,23 @@ public class AnalyticsFragment extends Fragment {
                 fragmentManager.popBackStack();
             }
         });
-        amountReservations();
-        pieData();
-        barData();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                amountReservations();
+                pieData();
+                barData();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        pieChart.animateXY(2000, 2000);
+                        pieChart.invalidate();
+                        barChart.animateXY(2000, 2000);
+                    }
+                });
+            }
+        }).start();
     }
 
     public void amountReservations(){
@@ -172,9 +191,9 @@ public class AnalyticsFragment extends Fragment {
         //showing the value of the entries, default true if not set
         pieData.setDrawValues(true);
 
-        pieChart.animateXY(2000, 2000);
+
         pieChart.setData(pieData);
-        pieChart.invalidate();
+
     }
     public void barData(){
         final ArrayList<String> xAxisLabel = new ArrayList<>();
@@ -228,7 +247,6 @@ public class AnalyticsFragment extends Fragment {
         barDataSet.setDrawValues(false);
 
         BarData barData = new BarData(barDataSet);
-        barChart.animateXY(2000, 2000);
         barChart.setFitBars(true);
         barChart.setData(barData);
 

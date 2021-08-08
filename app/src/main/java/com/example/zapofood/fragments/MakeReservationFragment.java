@@ -248,11 +248,21 @@ public class MakeReservationFragment extends Fragment {
                         fragmentManager.popBackStack();
                     }
                 });
+                String date = new SimpleDateFormat("MM", Locale.getDefault()).format(new Date());
+                int month = Integer.parseInt(date);
+                List<Integer> historyReservations = new ArrayList<>();
+                try {
+                    historyReservations = ParseUser.getCurrentUser().fetch().getList("historyReservations");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                historyReservations.set(month-1, historyReservations.get(month-1)+1);
                 int amount = (int) ParseUser.getCurrentUser().getNumber("reservations");
                 List<ParseObject> restaurants = ParseUser.getCurrentUser().getList("historyRestaurant");
                 restaurants.add(restaurant);
                 ParseUser.getCurrentUser().put("reservations", amount+1);
                 ParseUser.getCurrentUser().put("historyRestaurant", restaurants);
+                ParseUser.getCurrentUser().put("historyReservations", historyReservations);
                 ParseUser.getCurrentUser().saveInBackground();
             }
         });

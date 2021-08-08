@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zapofood.fragments.HomeFragment;
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etLoginUsername;
     private EditText etLoginPassword;
     private Button btnLoginSignIn;
+    private TextView tvButtonNewAccount;
     private CardView btnLoginFacebook;
 
     @Override
@@ -55,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         etLoginPassword = findViewById(R.id.etLoginPassword);
         btnLoginSignIn = findViewById(R.id.btnLoginSignIn);
         btnLoginFacebook = findViewById(R.id.containerFacebookLogin);
+        tvButtonNewAccount = findViewById(R.id.tvButtonNewAccount);
 
         btnLoginSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +65,15 @@ public class LoginActivity extends AppCompatActivity {
                 String username = etLoginUsername.getText().toString();
                 String password = etLoginPassword.getText().toString();
                 loginUser(username, password);
+            }
+        });
+
+        tvButtonNewAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
