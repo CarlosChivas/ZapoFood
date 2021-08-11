@@ -50,6 +50,12 @@ The user will be able to add restaurants to favorites, this section will save th
     * User can select the time for the reservation and the duration.
 * My reservations
     * The user can see his reservations
+* Favorites
+    * The user can see his favorites restaurants
+* Analytics
+    * The user can see his analytics
+* Friends
+    * The user can see his friends
 
 ### 3. Navigation
 
@@ -79,6 +85,25 @@ The user will be able to add restaurants to favorites, this section will save th
 
 ## Schema 
 ### Models
+#### User
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | Unique id for the user post (default field) |
+   | username          | String   | User username |
+   | password         | String     | User password|
+   | email       | String   | User email |
+   | image | File   | User image |
+   | friends | Array   | User friends |
+   | requests | Array   | Requests received by the user |
+   | sentRequests | Array   | Requests sent by the user |
+   | reservations | Number   | Number of reservations made by the user |
+   | historyReservations | Array   | History of reservations made by the user|
+   | favorites | Array   | User favorites restaurants |
+   | historyRestaurants | Array   | History of restaurants visited by the user |
+   | createdAt     | DateTime | Date when user is created (default field) |
+   | updatedAt     | DateTime | Date when user is last updated (default field) |
+   
 #### Restaurant
 
    | Property      | Type     | Description |
@@ -90,7 +115,27 @@ The user will be able to add restaurants to favorites, this section will save th
    | score | Number   | Score determinated by users |
    | createdAt     | DateTime | Date when restaurant is created (default field) |
    | updatedAt     | DateTime | Date when restaurant is last updated (default field) |
-### Networking
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+
+#### Reservation
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | Unique id for the user post (default field) |
+   | user          | ParseObject   | User who created the reservation |
+   | date         | DateTime     | Reservation date |
+   | restaurant       | ParseObject   | Restaurant for the reservation |
+   | persons | Array<ParseObject>   | Friends invited by the user |
+   | createdAt     | DateTime | Date when reservation is created (default field) |
+   | updatedAt     | DateTime | Date when reservation is last updated (default field) |
+  
+  #### Review
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | Unique id for the user post (default field) |
+   | user          | ParseObject   | User who created the review |
+   | restaurant       | ParseObject   | Reviewed restaurant |
+   | text | String   | Review text |
+   | createdAt     | DateTime | Date when reservation is created (default field) |
+   | updatedAt     | DateTime | Date when reservation is last updated (default field) |
+
